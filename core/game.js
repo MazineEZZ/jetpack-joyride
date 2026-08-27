@@ -164,13 +164,6 @@ class Game {
       this.score++;
       // this.audio.playCollect();
       this.scoreLabel.setText(`Score: ${this.score}`);
-
-      if (this.score >= 1) this.events.emit("levelComplete", {});
-    });
-    this.events.on("levelComplete", () => {
-      this.messageLabel.setText("You won!");
-      this.ui.add(this.messageLabel);
-      setTimeout(() => this.restart(), 1000);
     });
     this.events.on("playerDied", () => {
       this.messageLabel.setText("You lost!");

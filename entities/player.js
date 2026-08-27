@@ -1,5 +1,5 @@
 import { separate } from "../systems/collisions.js";
-import { gameSettings, playerSettings } from "../data/settings.js";
+import { gameSettings, physicsSettings } from "../data/settings.js";
 import { Rect } from "../core/rect.js";
 import { Vector2 } from "../core/vector.js";
 
@@ -17,30 +17,17 @@ class Player extends Rect {
     color = "red",
   ) {
     super(x, y, hitboxWidth, hitboxHeight, zIndex, color);
-    this.speed = playerSettings.speed;
+    this.gravity = new Vector2(0, physicsSettings.gravity);
+    this.velocity = new Vector2(0, 0);
     this.collision = collision;
     this.input = input;
   }
   update(delta) {
-    const dir = new Vector2();
+    if (this.input.isDown("go_up"))
+      this.velocity.y -= gameSettings.thrust * delta;
 
-    if (this.input.isDown("move_up")) dir.y -= 1;
-    if (this.input.isDown("move_down")) dir.y += 1;
-    if (this.input.isDown("move_left")) {
-      dir.x -= 1;
-      // this.animation.flipH = true;
-    }
-    if (this.input.isDown("move_right")) {
-      dir.x += 1;
-      // this.animation.flipH = false;
-    }
-
-    // if (dir.x || dir.y) this.animation.select("run");
-    // else this.animation.select("idle");
-
-    const normalized = dir.normalize();
-    this.position.x += normalized.x * this.speed * delta;
-    this.position.y += normalized.y * this.speed * delta;
+    this.velocity.y += this.gravity.y * delta;
+    this.position.y += this.velocity.y * delta;
 
     this.keepInBounds({
       width: gameSettings.width,
@@ -54,9 +41,14 @@ class Player extends Rect {
   keepInBounds(size) {
     for (const axis of ["x", "y"]) {
       const dim = axis === "x" ? "width" : "height";
-      if (this.position[axis] <= 0) this.position[axis] = 0;
-      if (this.position[axis] + this[dim] >= size[dim])
+      if (this.position[axis] <= 0) {
+        this.position[axis] = 0;
+        if (this.velocity.y <= 0) this.velocity.y = 0;
+      }
+      if (this.position[axis] + this[dim] >= size[dim]) {
         this.position[axis] = size[dim] - this[dim];
+        this.velocity.y = 0;
+      }
     }
   }
   onHit(entity) {

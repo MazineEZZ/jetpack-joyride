@@ -8,15 +8,12 @@ const gameSettings = Object.freeze({
 });
 
 const inputBindings = Object.freeze({
-  move_up: "z",
-  move_down: "s",
-  move_left: "q",
-  move_right: "d",
-  pause_game: "p",
+  go_up: " ",
 });
 
-const playerSettings = Object.freeze({
-  speed: 400,
+const physicsSettings = Object.freeze({
+  gravity: 300,
+  thrust: 1000,
 });
 
-export { gameSettings, inputBindings, playerSettings };
+export { gameSettings, inputBindings, physicsSettings };
