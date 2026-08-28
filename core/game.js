@@ -27,8 +27,12 @@ class Game {
     this.ui = new UILayer();
     this.lastTime = null;
     this.animationFrameId = null;
-    this.score = 0;
     this.isPaused = false;
+
+    //
+    this.score = 0;
+    this.distance = 0;
+    this.scrollSpeed = gameSettings.scrollSpeed;
 
     // Initial Setup
     this.canvas.width = gameSettings.width;
@@ -207,8 +211,9 @@ class Game {
     // this.debugGrid();
   }
   update(dt) {
+    this.distance += this.scrollSpeed * dt;
     // Factories
-    this.factories.update(dt);
+    this.factories.update(dt, this.distance);
     // Entities
     this.entities.update(dt);
   }
