@@ -1,24 +1,20 @@
-import { Rect } from "../core/rect.js";
+import { ScrollableEntity } from "./scrollableEntity.js";
+import { physicsSettings } from "../data/settings.js";
 
-class Coin extends Rect {
+class Coin extends ScrollableEntity {
   constructor(
-    x,
     y,
     width,
     height,
     zIndex,
-    collision,
     entities,
+    collision,
     events,
     color = "yellow",
   ) {
-    super(x, y, width, height, zIndex, color);
-    this.collision = collision;
-    this.entities = entities;
+    super(y, width, height, zIndex, entities, collision, color);
     this.events = events;
-  }
-  update() {
-    this.collision.check(this);
+    this.speed = physicsSettings.speed;
   }
   onHit(other) {
     this.entities.unregister(this);

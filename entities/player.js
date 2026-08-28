@@ -18,13 +18,13 @@ class Player extends Rect {
   ) {
     super(x, y, hitboxWidth, hitboxHeight, zIndex, color);
     this.gravity = new Vector2(0, physicsSettings.gravity);
+    this.thrust = physicsSettings.thrust;
     this.velocity = new Vector2(0, 0);
     this.collision = collision;
     this.input = input;
   }
   update(delta) {
-    if (this.input.isDown("go_up"))
-      this.velocity.y -= gameSettings.thrust * delta;
+    if (this.input.isDown("go_up")) this.velocity.y -= this.thrust * delta;
 
     this.velocity.y += this.gravity.y * delta;
     this.position.y += this.velocity.y * delta;

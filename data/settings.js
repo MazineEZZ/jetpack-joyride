@@ -5,6 +5,7 @@ const gameSettings = Object.freeze({
   margin: 5,
   grid: 80,
   bgColor: "blue",
+  scrollSpeed: 500,
 });
 
 const inputBindings = Object.freeze({
@@ -12,8 +13,11 @@ const inputBindings = Object.freeze({
 });
 
 const physicsSettings = Object.freeze({
-  gravity: 300,
-  thrust: 1000,
+  gravity: 1440, // Using the position over time formula where Vi = 0 & X0 = 0 gives us a = 2 * d / t^2
+  thrust: 1440 * 2,
+  timeToFall: 1, // Per seconds
+  speed: 600,
+  offset: 20,
 });
 
 export { gameSettings, inputBindings, physicsSettings };

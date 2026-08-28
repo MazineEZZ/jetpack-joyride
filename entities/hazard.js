@@ -1,22 +1,19 @@
-import { Rect } from "../core/rect.js";
+import { physicsSettings } from "../data/settings.js";
+import { ScrollableEntity } from "./scrollableEntity.js";
 
-class Hazard extends Rect {
+class Hazard extends ScrollableEntity {
   constructor(
-    x,
     y,
     width,
     height,
     zIndex,
+    entities,
     collisions,
     events,
     color = "green",
   ) {
-    super(x, y, width, height, zIndex, color);
-    this.collisions = collisions;
+    super(y, width, height, zIndex, entities, collisions, color);
     this.events = events;
-  }
-  update() {
-    this.collisions.check(this);
   }
   onHit(other) {
     this.events.emit("playerDied", { hazard: this });

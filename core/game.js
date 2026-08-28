@@ -10,6 +10,8 @@ import { EventBus } from "../systems/events.js";
 import { AudioSystem } from "../systems/audio.js";
 import { UILayer, Label } from "../ui/ui.js";
 import { Hazard } from "../entities/hazard.js";
+import { CoinFactory } from "../entities/coinFactory.js";
+import { FactoryRegistry } from "../systems/factories.js";
 
 class Game {
   constructor(canvas) {
@@ -21,6 +23,7 @@ class Game {
     this.audio = new AudioSystem();
     this.input = new Inputs(inputBindings);
     this.events = new EventBus();
+    this.factories = new FactoryRegistry();
     this.ui = new UILayer();
     this.lastTime = null;
     this.animationFrameId = null;
@@ -157,6 +160,15 @@ class Game {
       this.spawn(entityData);
     }
 
+    // ! Factories
+    this.coinFactory = new CoinFactory(
+      this.entities,
+      this.collisions,
+      this.events,
+    );
+
+    this.factories.register(this.coinFactory);
+
     this.entities.sortByLayers();
 
     // Events
@@ -195,6 +207,8 @@ class Game {
     // this.debugGrid();
   }
   update(dt) {
+    // Factories
+    this.factories.update(dt);
     // Entities
     this.entities.update(dt);
   }
