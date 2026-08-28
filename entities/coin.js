@@ -10,11 +10,11 @@ class Coin extends ScrollableEntity {
     entities,
     collision,
     events,
+    speed,
     color = "yellow",
   ) {
-    super(y, width, height, zIndex, entities, collision, color);
+    super(y, width, height, zIndex, entities, collision, speed, color);
     this.events = events;
-    this.speed = physicsSettings.speed;
   }
   onHit(other) {
     this.entities.unregister(this);

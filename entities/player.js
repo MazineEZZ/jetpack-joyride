@@ -14,6 +14,7 @@ class Player extends Rect {
     zIndex,
     collision,
     input,
+    events,
     color = "red",
   ) {
     super(x, y, hitboxWidth, hitboxHeight, zIndex, color);
@@ -22,9 +23,23 @@ class Player extends Rect {
     this.velocity = new Vector2(0, 0);
     this.collision = collision;
     this.input = input;
+    this.events = events;
+    this.wasThrusting = false;
   }
   update(delta) {
-    if (this.input.isDown("go_up")) this.velocity.y -= this.thrust * delta;
+    const isThrusting = this.input.isDown("go_up");
+
+    if (isThrusting) this.velocity.y -= this.thrust * delta;
+
+    // Audio
+    if (isThrusting && this.onGround()) {
+      this.events.emit("jetpackStarted");
+    } else if (isThrusting && !this.onGround() && !this.wasThrusting) {
+      this.events.emit("jetpackOn");
+    } else if (!isThrusting && this.wasThrusting) {
+      this.events.emit("jetpackOff");
+    }
+    this.wasThrusting = isThrusting;
 
     this.velocity.y += this.gravity.y * delta;
     this.position.y += this.velocity.y * delta;
@@ -37,6 +52,9 @@ class Player extends Rect {
     // this.animation.update(delta);
 
     this.collision.check(this);
+  }
+  onGround() {
+    return this.position.y + this.height >= gameSettings.height;
   }
   keepInBounds(size) {
     for (const axis of ["x", "y"]) {

@@ -10,9 +10,10 @@ class Hazard extends ScrollableEntity {
     entities,
     collisions,
     events,
-    color = "green",
+    speed,
+    color = "red",
   ) {
-    super(y, width, height, zIndex, entities, collisions, color);
+    super(y, width, height, zIndex, entities, collisions, speed, color);
     this.events = events;
   }
   onHit(other) {

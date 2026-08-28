@@ -5,13 +5,14 @@ import { Coin } from "../entities/coin.js";
 import { EntityRegistry } from "../systems/registry.js";
 import { CollisionSystem } from "../systems/collisions.js";
 import { Inputs } from "../systems/inputs.js";
-import { level1 } from "../data/levels.js";
+import { playerData } from "../data/entityData.js";
 import { EventBus } from "../systems/events.js";
 import { AudioSystem } from "../systems/audio.js";
 import { UILayer, Label } from "../ui/ui.js";
 import { Hazard } from "../entities/hazard.js";
 import { CoinFactory } from "../entities/coinFactory.js";
 import { FactoryRegistry } from "../systems/factories.js";
+import { Zapper } from "../entities/zapper.js";
 
 class Game {
   constructor(canvas) {
@@ -29,7 +30,7 @@ class Game {
     this.animationFrameId = null;
     this.isPaused = false;
 
-    //
+    // Game data
     this.score = 0;
     this.distance = 0;
     this.scrollSpeed = gameSettings.scrollSpeed;
@@ -56,6 +57,15 @@ class Game {
     window.addEventListener("resize", () => {
       this.resizeCanvas();
       this.draw();
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && !this.isPaused) {
+        if (!this.isPaused) {
+          this.events.emit("gamePaused");
+        } else {
+          this.events.emit("gameUnpaused");
+        }
+      }
     });
   }
   resizeCanvas() {
@@ -95,56 +105,42 @@ class Game {
       this.ctx.stroke();
     }
   }
-  spawn(entityData) {
-    const { type, x, y, width, height, hitboxWidth, hitboxHeight, zIndex } =
-      entityData;
-    let entity;
-    switch (type) {
-      case "player":
-        entity = new Player(
-          x,
-          y,
-          width,
-          height,
-          hitboxWidth,
-          hitboxHeight,
-          zIndex,
-          this.collisions,
-          this.input,
-          "red",
-        );
-        this.collisions.register(entity);
-        break;
-      case "barrier":
-        entity = new Barrier(x, y, width, height);
-        this.collisions.register(entity);
-        break;
-      case "hazard":
-        entity = new Hazard(
-          x,
-          y,
-          width,
-          height,
-          zIndex,
-          this.collisions,
-          this.events,
-        );
-        break;
-      case "coin":
-        entity = new Coin(
-          x,
-          y,
-          width,
-          height,
-          zIndex,
-          this.collisions,
-          this.entities,
-          this.events,
-        );
-        break;
-    }
-    this.entities.register(entity);
-    return entity;
+  spawn() {
+    const player = new Player(
+      playerData.x,
+      playerData.y,
+      playerData.width,
+      playerData.height,
+      playerData.hitboxWidth,
+      playerData.hitboxHeight,
+      playerData.zIndex,
+      this.collisions,
+      this.input,
+      this.events,
+      playerData.color,
+    );
+    this.collisions.register(player);
+    this.entities.register(player);
+
+    const zapper = new Zapper(
+      50,
+      80,
+      80,
+      3,
+      this.entities,
+      this.collisions,
+      this.events,
+    );
+    this.entities.register(zapper);
+
+    // Factories
+    this.coinFactory = new CoinFactory(
+      this.entities,
+      this.collisions,
+      this.events,
+    );
+
+    this.factories.register(this.coinFactory);
   }
   init() {
     this.scoreLabel = new Label(20, 40, { text: "Score: 0" });
@@ -160,31 +156,30 @@ class Game {
     );
     this.ui.add(this.scoreLabel);
 
-    for (const entityData of level1) {
-      this.spawn(entityData);
-    }
-
-    // ! Factories
-    this.coinFactory = new CoinFactory(
-      this.entities,
-      this.collisions,
-      this.events,
-    );
-
-    this.factories.register(this.coinFactory);
+    // Entities
+    this.spawn();
 
     this.entities.sortByLayers();
 
     // Events
     this.events.on("coinCollected", (coin) => {
       this.score++;
-      // this.audio.playCollect();
+      this.audio.playCollect();
       this.scoreLabel.setText(`Score: ${this.score}`);
     });
     this.events.on("playerDied", () => {
       this.messageLabel.setText("You lost!");
       this.ui.add(this.messageLabel);
       setTimeout(() => this.restart(), 1000);
+    });
+    this.events.on("jetpackOn", () => {
+      this.audio.playJetpackOn();
+    });
+    this.events.on("jetpackOff", () => {
+      this.audio.playJetpackOff();
+    });
+    this.events.on("jetpackStarted", () => {
+      this.audio.playJetpackStarted();
     });
     this.events.on("gamePaused", () => {
       this.messageLabel.setText("Game paused");
@@ -245,6 +240,7 @@ class Game {
     this.collisions = new CollisionSystem();
     this.events = new EventBus();
     this.ui = new UILayer();
+    this.factories = new FactoryRegistry();
     this.start();
   }
 }
