@@ -13,6 +13,7 @@ import { Hazard } from "../entities/hazard.js";
 import { CoinFactory } from "../entities/coinFactory.js";
 import { FactoryRegistry } from "../systems/factories.js";
 import { Zapper } from "../entities/zapper.js";
+import { ZapperFactory } from "../zapperFactory.js";
 
 class Game {
   constructor(canvas) {
@@ -139,8 +140,14 @@ class Game {
       this.collisions,
       this.events,
     );
+    this.zapperFactory = new ZapperFactory(
+      this.entities,
+      this.collisions,
+      this.events,
+    );
 
     this.factories.register(this.coinFactory);
+    this.factories.register(this.zapperFactory);
   }
   init() {
     this.scoreLabel = new Label(20, 40, { text: "Score: 0" });

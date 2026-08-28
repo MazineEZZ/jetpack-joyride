@@ -10,7 +10,7 @@ class Zapper extends Hazard {
     entities,
     collisions,
     events,
-    speed = gameSettings.scrollSpeed,
+    speed,
     color = "red",
   ) {
     super(y, width, height, zIndex, entities, collisions, events, speed, color);
