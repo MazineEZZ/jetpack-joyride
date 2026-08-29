@@ -27,21 +27,27 @@ class Player extends Rect {
     this.events = events;
     this.wasThrusting = false;
     this.animation = new AnimatedSprite(
-      "../assets/images/barry.png",
+      "../assets/images/barry-spritesheet.png",
       this.position.x,
       this.position.y,
-      this.width,
-      this.height,
+      width,
+      height,
       108 / 4,
       36,
       15,
     );
-    this.animation.add("idle", 0, 3);
+    this.animation.add("fly", 1, 1);
+    this.animation.add("run", 0, 3);
   }
   update(delta) {
     const isThrusting = this.input.isDown("go_up");
 
-    if (isThrusting) this.velocity.y -= this.thrust * delta;
+    if (isThrusting) {
+      this.velocity.y -= this.thrust * delta;
+      this.animation.select("fly");
+    } else if (this.onGround()) {
+      this.animation.select("run");
+    }
 
     // Audio
     if (isThrusting && this.onGround()) {
@@ -86,8 +92,8 @@ class Player extends Rect {
   }
   draw(ctx) {
     //* Hitbox
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    // ctx.fillStyle = this.color;
+    // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     //* Sprite
     this.animation.position = this.position;
     this.animation.draw(ctx, this.width, this.height);

@@ -35,7 +35,6 @@ class Game {
     this.canvas.width = gameSettings.width;
     this.canvas.height = gameSettings.height;
 
-    this.audio.adjustVolume();
     this.input.setUpInputs();
     this.resizeCanvas();
 
@@ -222,6 +221,8 @@ class Game {
     this.stop();
     this.score = 0;
     this.distance = 0;
+    this.audio.pauseSounds();
+    this.audio = new AudioSystem();
     this.entities = new EntityRegistry();
     this.collisions = new CollisionSystem();
     this.events = new EventBus();

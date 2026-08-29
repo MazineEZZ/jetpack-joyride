@@ -11,9 +11,14 @@ class AudioSystem {
     this.sounds.push(this.jetpackStarted);
     this.sounds.push(this.jetpackOn);
     this.sounds.push(this.jetpackOff);
+
+    this.adjustVolume();
   }
   adjustVolume(volume = 0.4) {
     this.sounds.forEach((sounds) => (sounds.volume = volume));
+  }
+  pauseSounds() {
+    this.sounds.forEach((sound) => sound.pause());
   }
   playCollect() {
     const sound = this.collect.cloneNode();

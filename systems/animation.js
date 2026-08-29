@@ -32,6 +32,7 @@ class AnimatedSprite extends Sprite {
     this.timer = 0;
     this.flipH = false;
     this.flipV = false;
+    this.isRotated = false;
   }
   add(name, row, col) {
     this.animations.push({ name, row, col });
@@ -70,15 +71,20 @@ class AnimatedSprite extends Sprite {
     ctx.scale(1, -1);
     this.drawY = -this.position.y - this.height;
   }
+  rotate(ctx) {
+    ctx.rotate(Math.PI / 2);
+  }
   draw(ctx, hitboxWidth, hitboxHeight) {
     if (this.animations.length === 0) throw new Error("Add an animation!");
 
     this.anchorToHitbox(hitboxWidth, hitboxHeight);
 
     ctx.save();
+    ctx.imageSmoothingEnabled = false;
 
     if (this.flipH) this.flipX(ctx);
     if (this.flipV) this.flipY(ctx);
+    if (this.isRotated) this.rotate(ctx);
 
     const selected = this.animations[this.selected];
 

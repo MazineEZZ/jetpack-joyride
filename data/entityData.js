@@ -1,8 +1,10 @@
+import { gameSettings } from "./settings.js";
+
 const playerData = {
   x: 400,
-  y: 80,
-  width: 100,
-  height: 120,
+  y: gameSettings.height - 90,
+  width: 80,
+  height: 110,
   hitboxWidth: 60,
   hitboxHeight: 90,
   zIndex: 5,
@@ -17,8 +19,8 @@ const coinData = {
 };
 
 const zapperData = {
-  width: 40,
-  height: 200,
+  width: 66 * 1.5,
+  height: 162 * 1.5,
   color: "red",
 };
 
