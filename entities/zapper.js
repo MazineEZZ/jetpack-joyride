@@ -17,7 +17,7 @@ class Zapper extends Hazard {
   ) {
     super(y, width, height, zIndex, entities, collisions, events, speed, color);
     this.animation = new AnimatedSprite(
-      "../assets/images/obstacle.png",
+      "../assets/images/zapper-spritesheet.png",
       this.position.x,
       this.position.y,
       this.width,
