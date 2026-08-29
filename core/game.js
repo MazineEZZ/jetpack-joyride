@@ -1,19 +1,14 @@
 import { gameSettings, inputBindings } from "../data/settings.js";
-import { Player } from "../entities/player.js";
-import { Barrier } from "../entities/barrier.js";
-import { Coin } from "../entities/coin.js";
 import { EntityRegistry } from "../systems/registry.js";
 import { CollisionSystem } from "../systems/collisions.js";
+import { FactoryRegistry } from "../systems/factories.js";
 import { Inputs } from "../systems/inputs.js";
-import { playerData } from "../data/entityData.js";
 import { EventBus } from "../systems/events.js";
 import { AudioSystem } from "../systems/audio.js";
 import { UILayer, Label } from "../ui/ui.js";
-import { Hazard } from "../entities/hazard.js";
-import { CoinFactory } from "../entities/coinFactory.js";
-import { FactoryRegistry } from "../systems/factories.js";
-import { Zapper } from "../entities/zapper.js";
-import { ZapperFactory } from "../zapperFactory.js";
+import { Player } from "../entities/player.js";
+import { playerData } from "../data/entityData.js";
+import { SegmentFactory } from "../entities/segmentFactory.js";
 
 class Game {
   constructor(canvas) {
@@ -123,31 +118,14 @@ class Game {
     this.collisions.register(player);
     this.entities.register(player);
 
-    const zapper = new Zapper(
-      50,
-      80,
-      80,
-      3,
-      this.entities,
-      this.collisions,
-      this.events,
-    );
-    this.entities.register(zapper);
-
     // Factories
-    this.coinFactory = new CoinFactory(
-      this.entities,
-      this.collisions,
-      this.events,
-    );
-    this.zapperFactory = new ZapperFactory(
+    const segmentFactory = new SegmentFactory(
       this.entities,
       this.collisions,
       this.events,
     );
 
-    this.factories.register(this.coinFactory);
-    this.factories.register(this.zapperFactory);
+    this.factories.register(segmentFactory);
   }
   init() {
     this.scoreLabel = new Label(20, 40, { text: "Score: 0" });
@@ -243,6 +221,7 @@ class Game {
   restart() {
     this.stop();
     this.score = 0;
+    this.distance = 0;
     this.entities = new EntityRegistry();
     this.collisions = new CollisionSystem();
     this.events = new EventBus();
