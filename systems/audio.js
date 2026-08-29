@@ -4,15 +4,15 @@ class AudioSystem {
 
     this.collect = new Audio("../assets/sounds/coin-pickup.mp3");
     this.jetpackStarted = new Audio("../assets/sounds/jetpack-started.mp3");
-    this.jetpackOn = new Audio("../assets/sounds/jetpack-on.mp3");
-    this.jetpackOff = new Audio("../assets/sounds/jetpack-stop.wav");
+    this.jetpackOn = new Audio("../assets/sounds/jetpack_firelp.wav");
+    this.jetpackOff = new Audio("../assets/sounds/jetpack_stop.wav");
 
     this.sounds.push(this.collect);
     this.sounds.push(this.jetpackStarted);
     this.sounds.push(this.jetpackOn);
     this.sounds.push(this.jetpackOff);
   }
-  adjustVolume(volume = 0.3) {
+  adjustVolume(volume = 0.4) {
     this.sounds.forEach((sounds) => (sounds.volume = volume));
   }
   playCollect() {
@@ -21,7 +21,7 @@ class AudioSystem {
   }
   playJetpackOn() {
     this.jetpackOn.loop = true;
-    this.jetpackOn.volume = 0.2;
+    this.jetpackOn.volume = 0.4;
     this.jetpackOn.play();
   }
   playJetpackOff() {

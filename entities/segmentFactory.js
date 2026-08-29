@@ -1,52 +1,82 @@
 import { EntityFactory } from "./entityFactory.js";
 import { gameSettings } from "../data/settings.js";
-import { coinData, patterns } from "../data/entityData.js";
+import { coinData, zapperData, patterns } from "../data/entityData.js";
 import { Coin } from "./coin.js";
 import { Zapper } from "./zapper.js";
 
 class SegmentFactory extends EntityFactory {
   constructor(entities, collisions, events) {
-    // Note to self, coins must always be above the number of zappers
     super(entities, collisions, events);
     this.lastDistance = 0;
     this.scrollSpeed = gameSettings.scrollSpeed;
-    this.size = coinData.size;
-    this.patterns = patterns;
+    this.coinSize = coinData.size;
+    this.zapperWidth = zapperData.width;
+    this.zapperHeight = zapperData.height;
+    this.edgeHeight = gameSettings.edgeHeight;
+    // Factory
     this.selected = 0;
-    this.ctr = 0;
+    this.patterns = patterns;
     this.offsetY = this.generateY();
-    this.distanceBetween = Math.max(1000, Math.min(Math.random() * 2000));
+    this.ctr = 0;
+    this.isSpawning = false;
+    this.distanceBetween = 200;
+    this.maxHeight = Math.max(this.coinSize, this.zapperHeight);
+    this.entityBuilders = {
+      coin: (y) => this.spawnCoin(y),
+      zapperV: (y) => this.spawnZapper(y, this.zapperWidth, this.zapperHeight),
+      zapperH: (y) => this.spawnZapper(y, this.zapperHeight, this.zapperWidth),
+    };
+  }
+  generateDistance() {
+    return Math.max(1000, Math.min(Math.random() * 1500));
   }
   selectPattern() {
     return Math.round(Math.random() * (this.patterns.length - 1));
   }
-  generateY() {
-    return Math.random() * (gameSettings.height - 200) + 100;
-  }
-  spawnEntity(type, yOffset) {
-    if (type === "coin") {
-      return new Coin(
-        yOffset + this.offsetY,
-        this.size,
-        this.size,
-        3,
-        this.entities,
-        this.collisions,
-        this.events,
-        this.scrollSpeed,
-      );
-    } else if (type === "zapper") {
-      return new Zapper(
-        yOffset + this.offsetY,
-        40,
-        200,
-        5,
-        this.entities,
-        this.collisions,
-        this.events,
-        this.scrollSpeed,
-      );
+  getPatternExtent(pattern) {
+    let min = Infinity,
+      max = -Infinity;
+    for (const step of pattern.steps) {
+      for (const type of Object.keys(step)) {
+        for (const y of step[type]) {
+          min = Math.min(min, y);
+          max = Math.max(max, y);
+        }
+      }
     }
+    return { min, max };
+  }
+  generateY() {
+    const pattern = this.patterns[this.selected];
+    const { min, max } = this.getPatternExtent(pattern);
+    const padding = 20 + this.edgeHeight;
+    const lowerBound = -min + padding;
+    const upperBound = gameSettings.height - max - padding - this.maxHeight;
+    return lowerBound + Math.random() * (upperBound - lowerBound);
+  }
+  spawnCoin(y) {
+    return new Coin(
+      y + this.offsetY,
+      this.coinSize,
+      this.coinSize,
+      3,
+      this.entities,
+      this.collisions,
+      this.events,
+      this.scrollSpeed,
+    );
+  }
+  spawnZapper(y, sizeDim1, sizeDim2) {
+    return new Zapper(
+      y + this.offsetY,
+      sizeDim1,
+      sizeDim2,
+      5,
+      this.entities,
+      this.collisions,
+      this.events,
+      this.scrollSpeed,
+    );
   }
   spawn() {
     const pattern = this.patterns[this.selected];
@@ -54,24 +84,21 @@ class SegmentFactory extends EntityFactory {
 
     for (const type of Object.keys(step)) {
       for (const y of step[type]) {
-        const entity = this.spawnEntity(type, y);
+        const entity = this.entityBuilders[type](y);
 
         this.entities.register(entity);
-        this.entities.sortByLayers();
       }
     }
+    this.entities.sortByLayers();
 
     this.ctr++;
+    this.isSpawning = true;
     if (this.ctr > pattern.steps.length - 1) {
-      this.offsetY = this.generateY();
-      this.selected = this.selectPattern();
-      this.ctr = 0;
-    }
-
-    if (this.ctr === 0) {
       this.isSpawning = false;
-    } else {
-      this.isSpawning = true;
+      this.selected = this.selectPattern();
+      this.offsetY = this.generateY();
+      this.distanceBetween = this.generateDistance();
+      this.ctr = 0;
     }
   }
   update(dt, distance) {

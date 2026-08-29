@@ -2,6 +2,7 @@ import { separate } from "../systems/collisions.js";
 import { gameSettings, physicsSettings } from "../data/settings.js";
 import { Rect } from "../core/rect.js";
 import { Vector2 } from "../core/vector.js";
+import { AnimatedSprite } from "../systems/animation.js";
 
 class Player extends Rect {
   constructor(
@@ -25,6 +26,17 @@ class Player extends Rect {
     this.input = input;
     this.events = events;
     this.wasThrusting = false;
+    this.animation = new AnimatedSprite(
+      "../assets/images/barry.png",
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height,
+      108 / 4,
+      36,
+      15,
+    );
+    this.animation.add("idle", 0, 3);
   }
   update(delta) {
     const isThrusting = this.input.isDown("go_up");
@@ -49,7 +61,7 @@ class Player extends Rect {
       height: gameSettings.height,
     });
 
-    // this.animation.update(delta);
+    this.animation.update(delta);
 
     this.collision.check(this);
   }
@@ -77,8 +89,8 @@ class Player extends Rect {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     //* Sprite
-    // this.animation.position = this.position;
-    // this.animation.draw(ctx, this.width, this.height);
+    this.animation.position = this.position;
+    this.animation.draw(ctx, this.width, this.height);
   }
 }
 
