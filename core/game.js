@@ -1,5 +1,5 @@
 import { gameSettings, inputBindings } from "../data/settings.js";
-import { EntityRegistry } from "../systems/registry.js";
+import { EntityRegistry } from "../systems/entities.js";
 import { CollisionSystem } from "../systems/collisions.js";
 import { FactoryRegistry } from "../systems/factories.js";
 import { Inputs } from "../systems/inputs.js";
@@ -11,7 +11,7 @@ import { playerData } from "../data/entityData.js";
 import { SegmentFactory } from "../entities/segmentFactory.js";
 import { Background, ScrollingBackground } from "./background.js";
 import { convertPxToMeters, pad } from "../utils/utils.js";
-import { Particle } from "../systems/particles.js";
+import { ParticleManager, ParticleSystem } from "../systems/particles.js";
 
 class Game {
   constructor(canvas) {
@@ -24,6 +24,7 @@ class Game {
     this.input = new Inputs(inputBindings);
     this.events = new EventBus();
     this.factories = new FactoryRegistry();
+    this.particles = new ParticleSystem();
     this.ui = new UILayer();
     this.lastTime = null;
     this.animationFrameId = null;
@@ -175,6 +176,17 @@ class Game {
 
     this.entities.sortByLayers();
 
+    // ! TEST
+    this.particleManager = new ParticleManager(
+      20,
+      370,
+      20,
+      20,
+      10,
+      1.5,
+      this.particles,
+    );
+
     // UI
     this.loadUI();
 
@@ -217,6 +229,8 @@ class Game {
     this.background.draw(this.ctx);
     // Entities
     this.entities.draw(this.ctx);
+    // Particles
+    this.particles.draw(this.ctx);
     // UI
     this.ui.draw(this.ctx);
     // this.debugGrid();
@@ -230,6 +244,9 @@ class Game {
     this.distanceCtrLabel.setText(`${pad(this.metersCrossed, 4)} M`);
     // Factories
     this.factories.update(dt, this.distance);
+    // Particles
+    this.particles.update(dt);
+    this.particleManager.update(dt);
     // Entities
     this.entities.update(dt);
   }
@@ -264,6 +281,7 @@ class Game {
     this.collisions = new CollisionSystem();
     this.events = new EventBus();
     this.ui = new UILayer();
+    this.particles = new ParticleSystem();
     this.factories = new FactoryRegistry();
     this.start();
   }

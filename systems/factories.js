@@ -1,18 +1,12 @@
 import { gameSettings } from "../data/settings.js";
+import { RegistrySystem } from "./registry.js";
 
-class FactoryRegistry {
+class FactoryRegistry extends RegistrySystem {
   constructor() {
-    this.factories = [];
-  }
-  register(factory) {
-    this.factories.push(factory);
-  }
-  unregister(factory) {
-    const i = this.factories.indexOf(factory);
-    if (i !== -1) this.factories.splice(i, 1);
+    super();
   }
   update(dt, distance) {
-    for (const f of [...this.factories]) f.update(dt, distance);
+    for (const e of [...this.elements]) e.update(dt, distance);
   }
 }
 export { FactoryRegistry };

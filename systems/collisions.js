@@ -1,16 +1,11 @@
-class CollisionSystem {
+import { RegistrySystem } from "./registry.js";
+
+class CollisionSystem extends RegistrySystem {
   constructor() {
-    this.hitboxes = [];
-  }
-  register(entity) {
-    this.hitboxes.push(entity);
-  }
-  unregister(entity) {
-    const i = this.hitboxes.indexOf(entity);
-    if (i !== -1) this.hitboxes.splice(i, 1);
+    super();
   }
   check(subject) {
-    for (const other of this.hitboxes) {
+    for (const other of this.elements) {
       if (subject === other) continue;
       if (isColliding(subject, other)) {
         subject.onHit(other);

@@ -1,22 +1,13 @@
-class EntityRegistry {
+class RegistrySystem {
   constructor() {
-    this.entities = [];
+    this.elements = [];
   }
-  register(entity) {
-    this.entities.push(entity);
+  register(element) {
+    this.elements.push(element);
   }
-  unregister(entity) {
-    const i = this.entities.indexOf(entity);
-    if (i !== -1) this.entities.splice(i, 1);
-  }
-  sortByLayers() {
-    this.entities.sort((a, b) => a.zIndex - b.zIndex);
-  }
-  draw(ctx) {
-    for (const e of [...this.entities]) e.draw(ctx);
-  }
-  update(dt) {
-    for (const e of [...this.entities]) e.update(dt);
+  unregister(element) {
+    const i = this.elements.indexOf(element);
+    if (i !== -1) this.elements.splice(i, 1);
   }
 }
-export { EntityRegistry };
+export { RegistrySystem };

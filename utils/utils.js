@@ -10,13 +10,23 @@ function pad(num, p) {
   return num.toString().padStart(p, "0");
 }
 
-function colorToHex(color) {
+function colorToRGB(color) {
   const tempEl = document.createElement("div");
   tempEl.style.color = color;
+  document.body.appendChild(tempEl);
 
-  const code = window.getComputedStyle(tempEl);
+  const colorCode = window.getComputedStyle(tempEl).color;
+  document.body.removeChild(tempEl);
 
-  return code;
+  const zero = 0;
+  const rgbValues = colorCode.match(/\d+/g);
+  if (!rgbValues) return { zero, zero, zero };
+
+  const r = parseInt(rgbValues[0]);
+  const g = parseInt(rgbValues[1]);
+  const b = parseInt(rgbValues[2]);
+
+  return { r, g, b };
 }
 
-export { convertPxToMeters, pad, colorToHex };
+export { convertPxToMeters, pad, colorToRGB };

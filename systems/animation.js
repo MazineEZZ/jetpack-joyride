@@ -86,7 +86,6 @@ class AnimatedSprite extends Sprite {
 
     const selected = this.animations[this.selected];
 
-    console.log(this.colCtr);
     ctx.drawImage(
       this.image,
       this.spriteWidth * this.colCtr,

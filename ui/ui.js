@@ -53,7 +53,7 @@ class Label extends UIElement {
         document.fonts.add(loadedFont);
         this.font = `${this.fontSize} ${this.fontName}`;
       })
-      .catch((err) => console.log("Font failed to load: ", error));
+      .catch((err) => ("Font failed to load: ", error));
   }
   setText(text) {
     this.text = text;
