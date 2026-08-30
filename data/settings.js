@@ -4,7 +4,7 @@ const gameSettings = Object.freeze({
   ratio: 16 / 9,
   margin: 5,
   grid: 80,
-  edgeHeight: 150,
+  edgeHeight: 80,
   bgColor: "blue",
   scrollSpeed: 500,
 });

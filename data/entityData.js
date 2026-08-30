@@ -2,7 +2,7 @@ import { gameSettings } from "./settings.js";
 
 const playerData = {
   x: 400,
-  y: gameSettings.height - 90,
+  y: gameSettings.height - gameSettings.edgeHeight,
   width: 80,
   height: 110,
   hitboxWidth: 60,

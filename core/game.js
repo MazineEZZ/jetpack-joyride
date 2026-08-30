@@ -9,6 +9,7 @@ import { UILayer, Label } from "../ui/ui.js";
 import { Player } from "../entities/player.js";
 import { playerData } from "../data/entityData.js";
 import { SegmentFactory } from "../entities/segmentFactory.js";
+import { Background, ScrollingBackground } from "./background.js";
 
 class Game {
   constructor(canvas) {
@@ -35,6 +36,13 @@ class Game {
     this.canvas.width = gameSettings.width;
     this.canvas.height = gameSettings.height;
 
+    this.background = new ScrollingBackground(
+      "../assets/images/background.png",
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height,
+    );
     this.input.setUpInputs();
     this.resizeCanvas();
 
@@ -181,8 +189,7 @@ class Game {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // Background
-    this.ctx.fillStyle = gameSettings.bgColor;
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.background.draw(this.ctx);
     // Entities
     this.entities.draw(this.ctx);
     // UI
@@ -190,6 +197,7 @@ class Game {
     // this.debugGrid();
   }
   update(dt) {
+    this.background.update(dt);
     this.distance += this.scrollSpeed * dt;
     // Factories
     this.factories.update(dt, this.distance);

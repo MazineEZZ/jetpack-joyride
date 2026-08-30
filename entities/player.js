@@ -64,7 +64,7 @@ class Player extends Rect {
 
     this.keepInBounds({
       width: gameSettings.width,
-      height: gameSettings.height,
+      height: gameSettings.height - gameSettings.edgeHeight,
     });
 
     this.animation.update(delta);
@@ -72,13 +72,16 @@ class Player extends Rect {
     this.collision.check(this);
   }
   onGround() {
-    return this.position.y + this.height >= gameSettings.height;
+    return (
+      this.position.y + this.height >=
+      gameSettings.height - gameSettings.edgeHeight
+    );
   }
   keepInBounds(size) {
     for (const axis of ["x", "y"]) {
       const dim = axis === "x" ? "width" : "height";
-      if (this.position[axis] <= 0) {
-        this.position[axis] = 0;
+      if (this.position[axis] <= gameSettings.edgeHeight) {
+        this.position[axis] = gameSettings.edgeHeight;
         if (this.velocity.y <= 0) this.velocity.y = 0;
       }
       if (this.position[axis] + this[dim] >= size[dim]) {

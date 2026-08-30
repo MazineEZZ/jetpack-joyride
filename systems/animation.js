@@ -1,12 +1,10 @@
 import { gameSettings } from "../data/settings.js";
 
 class Sprite {
-  constructor(src, x, y, width, height, spriteWidth, spriteHeight) {
+  constructor(src, x, y, width, height) {
     this.position = { x, y };
     this.width = width;
     this.height = height;
-    this.spriteWidth = spriteWidth;
-    this.spriteHeight = spriteHeight;
     this.image = new Image();
     this.image.src = src;
   }
@@ -23,7 +21,9 @@ class Sprite {
 
 class AnimatedSprite extends Sprite {
   constructor(src, x, y, width, height, spriteWidth, spriteHeight, fps = 24) {
-    super(src, x, y, width, height, spriteWidth, spriteHeight, height);
+    super(src, x, y, width, height);
+    this.spriteWidth = spriteWidth;
+    this.spriteHeight = spriteHeight;
     this.animations = [];
     this.selected = 0;
     this.colCtr = 0;
@@ -55,9 +55,9 @@ class AnimatedSprite extends Sprite {
     while (this.timer >= this.frameDuration) {
       this.colCtr++;
       this.timer -= this.frameDuration; // Subtracting to account for the leftover time
+      this.colCtr =
+        this.colCtr >= this.animations[this.selected].col ? 0 : this.colCtr;
     }
-    this.colCtr =
-      this.colCtr >= this.animations[this.selected].col ? 0 : this.colCtr;
   }
   anchorToHitbox(hitWidth, hitHeight) {
     this.drawX = this.position.x - this.width / 2 + hitWidth / 2;
@@ -88,6 +88,7 @@ class AnimatedSprite extends Sprite {
 
     const selected = this.animations[this.selected];
 
+    console.log(this.colCtr);
     ctx.drawImage(
       this.image,
       this.spriteWidth * this.colCtr,
