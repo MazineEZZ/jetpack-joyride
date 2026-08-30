@@ -15,19 +15,45 @@ class Label extends UIElement {
     y,
     {
       text = "",
-      font = "24px sans-serif",
       color = "white",
       zIndex = 0,
+      borderColor = "black",
+      borderSize = 4,
       align = "left",
       baseline = "alphabetic",
+      fontSize = "30px",
+      fontName = "sans-serif",
+      fontSrc = "",
     } = {},
   ) {
     super(x, y, zIndex);
     this.text = text;
-    this.font = font;
     this.color = color;
+    this.borderColor = borderColor;
+    this.borderSize = borderSize;
     this.align = align;
     this.baseline = baseline;
+
+    this.fontSize = fontSize;
+    this.fontName = fontName;
+
+    if (fontSrc !== "") {
+      this.font = `${this.fontSize} sans-serif`;
+      this.loadFont(fontSrc);
+    } else {
+      this.font = `${fontSize} ${fontName}`;
+    }
+  }
+  loadFont(fontSrc) {
+    const customFont = new FontFace(this.fontName, `url(${fontSrc})`);
+
+    customFont
+      .load()
+      .then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        this.font = `${this.fontSize} ${this.fontName}`;
+      })
+      .catch((err) => console.log("Font failed to load: ", error));
   }
   setText(text) {
     this.text = text;
@@ -35,9 +61,15 @@ class Label extends UIElement {
   draw(ctx) {
     if (!this.visible) return;
     ctx.font = this.font;
-    ctx.fillStyle = this.color;
     ctx.textAlign = this.align;
     ctx.textBaseline = this.baseline;
+    // Border
+    ctx.strokeStyle = this.borderColor;
+    ctx.lineWidth = this.borderSize;
+    ctx.lineJoin = "round";
+    ctx.strokeText(this.text, this.position.x, this.position.y);
+    // Font
+    ctx.fillStyle = this.color;
     ctx.fillText(this.text, this.position.x, this.position.y);
   }
 }

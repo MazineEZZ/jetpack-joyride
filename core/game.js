@@ -10,6 +10,8 @@ import { Player } from "../entities/player.js";
 import { playerData } from "../data/entityData.js";
 import { SegmentFactory } from "../entities/segmentFactory.js";
 import { Background, ScrollingBackground } from "./background.js";
+import { convertPxToMeters, pad } from "../utils/utils.js";
+import { Particle } from "../systems/particles.js";
 
 class Game {
   constructor(canvas) {
@@ -134,30 +136,53 @@ class Game {
 
     this.factories.register(segmentFactory);
   }
-  init() {
-    this.scoreLabel = new Label(20, 40, { text: "Score: 0" });
+  loadUI() {
+    const fontName = "jjFont";
+    const fontSrc = "../assets/fonts/jjFont.ttf";
+    const fontSize = "30px";
+    this.scoreLabel = new Label(20, 105, {
+      text: "Coins: 000",
+      color: "#f5bd4d",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+    });
+    this.distanceCtrLabel = new Label(20, 65, {
+      text: "0000 M",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+    });
     this.messageLabel = new Label(
       gameSettings.width / 2,
       gameSettings.height / 2,
       {
-        font: "40px sans-serif",
-        color: "green",
         align: "center",
         baseline: "middle",
+        fontSize: "50px",
+        fontName: fontName,
+        fontSrc: fontSrc,
       },
     );
     this.ui.add(this.scoreLabel);
-
+    this.ui.add(this.distanceCtrLabel);
+  }
+  init() {
     // Entities
     this.spawn();
 
     this.entities.sortByLayers();
 
+    // UI
+    this.loadUI();
+
     // Events
     this.events.on("coinCollected", (coin) => {
       this.score++;
       this.audio.playCollect();
-      this.scoreLabel.setText(`Score: ${this.score}`);
+      this.scoreLabel.setText(`Coins: ${pad(this.score, 3)}`);
     });
     this.events.on("playerDied", () => {
       this.messageLabel.setText("You lost!");
@@ -197,8 +222,12 @@ class Game {
     // this.debugGrid();
   }
   update(dt) {
+    // Background
     this.background.update(dt);
+    // Distance
     this.distance += this.scrollSpeed * dt;
+    this.metersCrossed = convertPxToMeters(this.distance);
+    this.distanceCtrLabel.setText(`${pad(this.metersCrossed, 4)} M`);
     // Factories
     this.factories.update(dt, this.distance);
     // Entities

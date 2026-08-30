@@ -23,9 +23,8 @@ class SegmentFactory extends EntityFactory {
     this.maxHeight = Math.max(this.coinSize, this.zapperHeight);
     this.entityBuilders = {
       coin: (y) => this.spawnCoin(y),
-      zapperV: (y) => this.spawnZapper(y, this.zapperWidth, this.zapperHeight),
-      zapperH: (y) =>
-        this.spawnZapper(y, this.zapperHeight, this.zapperWidth, true),
+      zapperV: (y) => this.spawnZapper(y),
+      zapperH: (y) => this.spawnZapper(y, true),
     };
   }
   generateDistance() {
@@ -67,11 +66,11 @@ class SegmentFactory extends EntityFactory {
       this.scrollSpeed,
     );
   }
-  spawnZapper(y, sizeDim1, sizeDim2, isRotated = false) {
+  spawnZapper(y, isRotated = false) {
     return new Zapper(
       y + this.offsetY,
-      sizeDim1,
-      sizeDim2,
+      this.zapperWidth,
+      this.zapperHeight,
       5,
       this.entities,
       this.collisions,

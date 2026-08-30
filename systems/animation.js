@@ -71,9 +71,7 @@ class AnimatedSprite extends Sprite {
     ctx.scale(1, -1);
     this.drawY = -this.position.y - this.height;
   }
-  rotate(ctx) {
-    ctx.rotate(Math.PI / 2);
-  }
+  rotate(ctx) {}
   draw(ctx, hitboxWidth, hitboxHeight) {
     if (this.animations.length === 0) throw new Error("Add an animation!");
 
