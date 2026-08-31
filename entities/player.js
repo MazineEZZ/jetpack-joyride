@@ -34,8 +34,8 @@ class Player extends Rect {
       10,
       20,
       "spray",
-      300,
-      30,
+      200,
+      200,
       2,
       particles,
       "fire",
@@ -52,6 +52,7 @@ class Player extends Rect {
     );
     this.animation.add("fly", 1, 1);
     this.animation.add("run", 0, 3);
+    this.wasOnAit = false;
   }
   update(delta) {
     const isThrusting = this.input.isDown("go_up");
@@ -66,6 +67,11 @@ class Player extends Rect {
       );
     } else if (this.onGround()) {
       this.animation.select("run");
+      this.events.emit("playerRunning");
+    }
+
+    if (this.wasOnAir && this.onGround()) {
+      this.events.emit("playerLanded");
     }
 
     // Audio
@@ -77,6 +83,7 @@ class Player extends Rect {
       this.events.emit("jetpackOff");
     }
     this.wasThrusting = isThrusting;
+    this.wasOnAir = !this.onGround();
 
     this.velocity.y += this.gravity.y * delta;
     this.position.y += this.velocity.y * delta;

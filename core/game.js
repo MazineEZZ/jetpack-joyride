@@ -182,6 +182,9 @@ class Game {
     // UI
     this.loadUI();
 
+    // Music
+    this.audio.playMusic();
+
     // Events
     this.events.on("coinCollected", (coin) => {
       this.score++;
@@ -192,6 +195,12 @@ class Game {
       this.messageLabel.setText("You lost!");
       this.ui.add(this.messageLabel);
       setTimeout(() => this.restart(), 1000);
+    });
+    this.events.on("playerRunning", () => {
+      this.audio.playRunning();
+    });
+    this.events.on("playerLanded", () => {
+      this.audio.playLand();
     });
     this.events.on("jetpackOn", () => {
       this.audio.playJetpackOn();
@@ -205,12 +214,14 @@ class Game {
     this.events.on("gamePaused", () => {
       this.messageLabel.setText("Game paused");
       this.ui.add(this.messageLabel);
+      this.audio.pauseMusic();
       this.draw();
       this.stop();
       this.isPaused = true;
     });
     this.events.on("gameUnpaused", () => {
       this.gameLoop();
+      this.audio.playMusic();
       this.ui.remove(this.messageLabel);
       this.isPaused = false;
     });
@@ -265,6 +276,7 @@ class Game {
   }
   restart() {
     this.stop();
+    this.audio.pauseMusic();
     this.score = 0;
     this.distance = 0;
     this.scrollSpeed = gameSettings.scrollSpeed;

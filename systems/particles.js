@@ -1,5 +1,6 @@
 import { Rect } from "../core/rect.js";
 import { Vector2 } from "../core/vector.js";
+import { gameSettings } from "../data/settings.js";
 import { colorToRGB, toRad, toDegrees } from "../utils/utils.js";
 import { RegistrySystem } from "./registry.js";
 
@@ -23,23 +24,28 @@ class Particle extends Rect {
     this.particles = particles;
 
     // Properties
-    this.rgb = colorToRGB(color);
+    this.rgb = colorToRGB("red");
     this.opacity = 1;
     this.speed = speed;
     this.lifetime = lifetime;
     this.timer = 0;
+    this.fadePower = 1500;
   }
   update(dt) {
     this.position.x += this.velocity.x * dt * this.speed;
     this.position.y += this.velocity.y * dt * this.speed;
 
     this.opacity -= this.timer / this.lifetime;
+    this.rgb.g += this.fadePower * dt;
     this.color = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${this.opacity})`;
 
     this.timer += dt;
-    if (this.timer >= this.lifetime) {
+    if (this.timer >= this.lifetime || this.isInGround()) {
       this.particles.unregister(this);
     }
+  }
+  isInGround() {
+    return this.position.y >= gameSettings.height - gameSettings.edgeHeight;
   }
   draw(ctx) {
     const angle = Math.atan2(this.velocity.x, -this.velocity.y);
@@ -80,7 +86,7 @@ class ParticleManager {
     this.speed = speed;
     this.timer = 0;
     this.palettes = {
-      fire: ["#f70000", "#f75700", "#f79500", "#f7c700", "#f7e007"],
+      fire: "#f70000",
     };
   }
   generateAngle(upperBound, lowerBound) {
@@ -88,9 +94,7 @@ class ParticleManager {
   }
   selectColor() {
     try {
-      const len = this.palettes[this.palette].length;
-      const colorIndex = Math.floor(Math.random() * len);
-      return this.palettes[this.palette][colorIndex];
+      return this.palettes[this.palette];
     } catch (err) {
       console.error(err);
     }
