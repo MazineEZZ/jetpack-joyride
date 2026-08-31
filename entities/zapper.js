@@ -51,13 +51,13 @@ class Zapper extends Hazard {
   }
   draw(ctx) {
     //* Hitbox
-    ctx.fillStyle = this.color;
-    ctx.fillRect(
-      this.position.x,
-      this.position.y,
-      this.hitboxWidth,
-      this.hitboxHeight,
-    );
+    // ctx.fillStyle = this.color;
+    // ctx.fillRect(
+    //   this.position.x,
+    //   this.position.y,
+    //   this.hitboxWidth,
+    //   this.hitboxHeight,
+    // );
     //* Sprite
     this.animation.position = this.position;
     this.animation.draw(ctx, this.hitboxWidth, this.hitboxHeight);

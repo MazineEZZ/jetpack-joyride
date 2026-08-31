@@ -71,10 +71,10 @@ class AnimatedSprite extends Sprite {
     ctx.scale(1, -1);
     this.drawY = -this.position.y - this.height;
   }
-  rotate(ctx) {
+  rotate(ctx, hitWidth, hitHeight) {
     ctx.translate(
-      this.position.x + this.width / 2,
-      this.position.y + this.height / 2,
+      this.position.x + hitWidth / 2,
+      this.position.y + hitHeight / 2,
     );
     ctx.rotate(Math.PI / 2);
     this.drawX = -this.width / 2;
@@ -90,7 +90,7 @@ class AnimatedSprite extends Sprite {
 
     if (this.flipH) this.flipX(ctx);
     if (this.flipV) this.flipY(ctx);
-    if (this.isRotated) this.rotate(ctx);
+    if (this.isRotated) this.rotate(ctx, hitboxWidth, hitboxHeight);
 
     const selected = this.animations[this.selected];
 

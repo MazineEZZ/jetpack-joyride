@@ -28,194 +28,173 @@ const zapperData = {
 
 const stepDist = 54;
 
-// I generated this using AI due to time limitations
 const patterns = [
-  // ==========================================
-  // zapperHS ONLY (Reflexes & Positioning)
-  // ==========================================
-
-  // 1. The Lone zapperV (Just 1 zapperV)
-  // A simple, single obstacle to keep the player awake.
-  // {
-  //   name: "lone_zapperH",
-  //   spacing: 200,
-  //   steps: [{ zapperV: [0] }],
-  // },
-
-  // // 2. The Simple Gate (Just 2 zapperHs)
-  // // A top and bottom zapperV forming a 140px safe gap.
-  // {
-  //   name: "double_gate",
-  //   spacing: 200,
-  //   steps: [{ zapperV: [-200, 140] }],
-  // },
-
-  // // 3. zapperV Stairs (3 zapperHs)
-  // // Wide horizontal spacing forces the player to gently glide downward.
-  // {
-  //   name: "zapperH_stairs",
-  //   spacing: 250,
-  //   steps: [{ zapperV: [-100] }, { zapperV: [50] }, { zapperV: [200] }],
-  // },
-
-  // // ==========================================
-  // // COINS ONLY (Rewards & Flight Training)
-  // // ==========================================
-
-  // // 4. Dense Coin Block (A fat 4x6 grid of pure joy)
-  // {
-  //   name: "dense_coin_block",
-  //   spacing: stepDist,
-  //   steps: Array(6).fill({ coin: [0, stepDist, stepDist * 2, stepDist * 3] }),
-  // },
-
-  // // 5. The Hollow Hexagon Ring
-  // {
-  //   name: "coin_hexagon",
-  //   spacing: stepDist,
-  //   steps: [
-  //     { coin: [54, 108] },
-  //     { coin: [0, 162] },
-  //     { coin: [-54, 216] },
-  //     { coin: [-54, 216] },
-  //     { coin: [0, 162] },
-  //     { coin: [54, 108] },
-  //   ],
-  // },
-
-  // // 6. Smooth Sine Wave (Single line)
-  // {
-  //   name: "coin_wave",
-  //   spacing: 50,
-  //   steps: [
-  //     { coin: [0] },
-  //     { coin: [-45] },
-  //     { coin: [-80] },
-  //     { coin: [-100] },
-  //     { coin: [-80] },
-  //     { coin: [-45] },
-  //     { coin: [0] },
-  //     { coin: [45] },
-  //     { coin: [80] },
-  //     { coin: [100] },
-  //     { coin: [80] },
-  //     { coin: [45] },
-  //     { coin: [0] },
-  //   ],
-  // },
-
-  // // 7. Diagonal Ascend (Single line)
-  // {
-  //   name: "diagonal_coins",
-  //   spacing: stepDist,
-  //   steps: [
-  //     { coin: [150] },
-  //     { coin: [100] },
-  //     { coin: [50] },
-  //     { coin: [0] },
-  //     { coin: [-50] },
-  //     { coin: [-100] },
-  //     { coin: [-150] },
-  //   ],
-  // },
-
-  // // 8. X Marks The Spot (Two intersecting lines)
-  // {
-  //   name: "x_marks_the_spot",
-  //   spacing: stepDist,
-  //   steps: [
-  //     { coin: [-108, 108] },
-  //     { coin: [-54, 54] },
-  //     { coin: [0] },
-  //     { coin: [-54, 54] },
-  //     { coin: [-108, 108] },
-  //   ],
-  // },
-
-  // // ==========================================
-  // // MIXED (Risk vs. Reward)
-  // // ==========================================
-
-  // // 9. The Guided Tunnel
-  // // A straight 140px tunnel of zapperHs with a perfectly centered line of coins (y = 50) guiding you.
-  // {
-  //   name: "zapperH_tunnel",
-  //   spacing: 120,
-  //   steps: Array(5).fill({ coin: [50], zapperV: [-200, 140] }),
-  // },
-
-  // // 10. The Choke Point
-  // // Forces the player through a tight zapperV gate, immediately rewarding them with a massive wall of coins.
-  // {
-  //   name: "the_choke_point",
-  //   spacing: stepDist + 20,
-  //   steps: [
-  //     { zapperV: [-200, 160] }, // The Gate
-  //     { coin: [-100, -46, 8, 62, 116, 170, 224] }, // The Reward Wall
-  //     { coin: [-100, -46, 8, 62, 116, 170, 224] },
-  //     { coin: [-100, -46, 8, 62, 116, 170, 224] },
-  //   ],
-  // },
-  // {
-  //   name: "laser_corridor",
-  //   spacing: 220,
-  //   steps: [
-  //     { zapperH: [0, 180], coin: [90] },
-  //     { zapperH: [0, 180], coin: [90] },
-  //     { zapperH: [0, 180], coin: [90] },
-  //   ],
-  // },
-
-  // 12. The Slalom (Zig-Zag)
-  // Forces the player to weave up, then down, then up.
-  // Spacing is 250 to give the player plenty of time to change altitude.
+  // 1. The Solid Diamond
+  // A fat, dense diamond shape that is incredibly satisfying to plow straight through.
   {
-    name: "horizontal_slalom",
-    spacing: 250,
+    name: "solid_diamond",
+    spacing: stepDist,
     steps: [
-      { zapperH: [0], coin: [100, 150] }, // Ceiling (coins below)
-      { zapperH: [160], coin: [20, 70] }, // Floor (coins above)
-      { zapperH: [0], coin: [100, 150] }, // Ceiling
-      { zapperH: [160], coin: [20, 70] }, // Floor
+      { coin: [0] },
+      { coin: [-stepDist, 0, stepDist] },
+      { coin: [-stepDist * 2, -stepDist, 0, stepDist, stepDist * 2] },
+      { coin: [-stepDist, 0, stepDist] },
+      { coin: [0] },
     ],
   },
 
-  // 13. The Coin Shelf
-  // A horizontal zapper acts as a deadly platform, but 4 sweet coins rest right on top of it.
-  // The spacing is 50, so 4 steps perfectly span the ~200px width of the single zapperH!
+  // 2. The DNA Helix
+  // Two sine waves intersecting each other. Beautiful to look at, tricky to collect all of them.
   {
-    name: "the_coin_shelf",
+    name: "dna_helix",
     spacing: 50,
     steps: [
-      { zapperH: [120], coin: [60] }, // Spawns the zapper AND the first coin
-      { coin: [60] }, // Just a coin
-      { coin: [60] }, // Just a coin
-      { coin: [60] }, // Just a coin
+      { coin: [-100, 100] },
+      { coin: [-50, 50] },
+      { coin: [0] }, // Intersection point
+      { coin: [-50, 50] },
+      { coin: [-100, 100] },
+      { coin: [-50, 50] },
+      { coin: [0] }, // Intersection point
+      { coin: [-50, 50] },
+      { coin: [-100, 100] },
     ],
   },
 
-  // 14. The Bait & Switch (Dead End)
-  // Starts like a normal corridor with coins, but a vertical zapper blocks the exit!
-  // The player has to grab the coins and dive OUT of the tunnel before the end.
+  // 3. The Big Smile (U-Turn)
+  // Forces the player to drop down low and immediately thrust back up.
   {
-    name: "bait_and_switch",
-    spacing: 100,
+    name: "big_smile",
+    spacing: 45,
     steps: [
-      { zapperH: [0, 180], coin: [90] },
-      { coin: [90] },
-      { zapperV: [0] }, // 200px tall vertical zapper blocking the exit!
+      { coin: [-120] },
+      { coin: [-80] },
+      { coin: [-40] },
+      { coin: [0] },
+      { coin: [30] },
+      { coin: [50] },
+      { coin: [50] },
+      { coin: [50] },
+      { coin: [30] },
+      { coin: [0] },
+      { coin: [-40] },
+      { coin: [-80] },
+      { coin: [-120] },
     ],
   },
 
-  // 15. The "T-Bone" Cross
-  // A horizontal zapper intersecting perfectly in the middle of a vertical one.
-  // Forces the player to make a wide maneuver around the edges.
+  // 4. The Checkerboard
+  // A 5-column wide block where every alternating coin is missing, creating a checker pattern.
   {
-    name: "t_bone_cross",
+    name: "checkerboard",
+    spacing: stepDist,
+    steps: [
+      { coin: [-stepDist * 2, 0, stepDist * 2] },
+      { coin: [-stepDist, stepDist] },
+      { coin: [-stepDist * 2, 0, stepDist * 2] },
+      { coin: [-stepDist, stepDist] },
+      { coin: [-stepDist * 2, 0, stepDist * 2] },
+    ],
+  },
+
+  // 5. The Triple Dash
+  // Three separate horizontal lines of coins with gaps between them.
+  // Forces the player to pick a lane (top, middle, or bottom).
+  {
+    name: "triple_dash",
+    spacing: stepDist,
+    steps: [
+      { coin: [-120, 0, 120] },
+      { coin: [-120, 0, 120] },
+      { coin: [-120, 0, 120] },
+      { coin: [-120, 0, 120] },
+      { coin: [-120, 0, 120] },
+    ],
+  },
+
+  // 6. The Pyramid (Forward-facing)
+  // A triangle pointing to the right. The player hits the flat wall of coins first, then it tapers off.
+  {
+    name: "pyramid_right",
+    spacing: stepDist,
+    steps: [
+      { coin: [-stepDist * 2, -stepDist, 0, stepDist, stepDist * 2] }, // Fat wall
+      { coin: [-stepDist, 0, stepDist] },
+      { coin: [0] }, // Tip of the pyramid
+    ],
+  },
+  {
+    name: "guiding_light",
     spacing: 200,
+    steps: [{ zapperV: [-243, 180], coin: [70] }],
+  },
+
+  // 2. The Dive
+  // A trail of coins leads the player downward, forcing them to duck under a ceiling zapper.
+  {
+    name: "the_dive",
+    spacing: 60,
     steps: [
-      { zapperV: [0], zapperH: [80] }, // If V is 200px tall, an H at 80 forms a perfect '+' cross.
+      { coin: [0] },
+      { coin: [40] },
+      { coin: [80] },
+      { zapperH: [-80], coin: [120] }, // Zapper ceiling, coin below
+      { coin: [120] },
+      { coin: [120] },
     ],
+  },
+
+  // 3. The Coin Bridge
+  // A straight line of coins hovering directly over a wide floor zapper.
+  // The spacing of 60 means 4 coins will perfectly span the ~243px width of the horizontal zapper.
+  {
+    name: "coin_bridge",
+    spacing: 60,
+    steps: [
+      { zapperH: [150], coin: [80] },
+      { coin: [80] },
+      { coin: [80] },
+      { coin: [80] },
+    ],
+  },
+
+  // 4. Thread the Needle Tunnel
+  // A short, wide horizontal tunnel. Coins are placed exactly in the 180px safe zone.
+  {
+    name: "thread_the_needle",
+    spacing: 240, // Wide horizontal spacing for high speeds
+    steps: [
+      { zapperH: [-100, 200], coin: [70] },
+      { zapperH: [-100, 200], coin: [70] },
+    ],
+  },
+
+  // ==========================================
+  // ZAPPERS ONLY (Simple Hazards)
+  // ==========================================
+
+  // 5. High-Low Slalom
+  // Forces a simple altitude change. Spacing is massive (350) so at high speeds it feels like a gentle wave.
+  {
+    name: "high_low_slalom",
+    spacing: 350,
+    steps: [{ zapperV: [-150] }, { zapperV: [150] }, { zapperV: [-150] }],
+  },
+
+  // 6. The Lone Horizontal
+  // Just a single wide zapper sitting in space. Player can easily go over or under it.
+  {
+    name: "lone_horizontal",
+    spacing: 200,
+    steps: [{ zapperH: [0] }],
+  },
+
+  // 7. The Double Gate
+  // Two consecutive vertical gates. No coins to distract the player, just a pure survival check.
+  {
+    name: "double_gate",
+    spacing: 350, // Massive spacing to prevent feeling boxed in
+    steps: [{ zapperV: [-243, 180] }, { zapperV: [-243, 180] }],
   },
 ];
 

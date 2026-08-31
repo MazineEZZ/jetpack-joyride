@@ -13,7 +13,6 @@ class SegmentFactory extends EntityFactory {
     this.zapperData = zapperData;
     this.edgeHeight = gameSettings.edgeHeight;
     // Factory
-    this.maxHeight = Math.max(this.coinData.size, this.zapperData.height);
     this.selected = 0;
     this.patterns = patterns;
     this.offsetY = this.generateY();
@@ -35,22 +34,31 @@ class SegmentFactory extends EntityFactory {
   getPatternExtent(pattern) {
     let min = Infinity,
       max = -Infinity;
+    let patternMaxHeight = 0;
+
     for (const step of pattern.steps) {
       for (const type of Object.keys(step)) {
+        let entityHeight = 0;
+        if (type === "coin") entityHeight = this.coinData.size;
+        if (type === "zapperV") entityHeight = this.zapperData.height;
+        if (type === "zapperH") entityHeight = this.zapperData.width;
+
+        patternMaxHeight = Math.max(patternMaxHeight, entityHeight);
+
         for (const y of step[type]) {
           min = Math.min(min, y);
           max = Math.max(max, y);
         }
       }
     }
-    return { min, max };
+    return { min, max, patternMaxHeight };
   }
   generateY() {
     const pattern = this.patterns[this.selected];
-    const { min, max } = this.getPatternExtent(pattern);
+    const { min, max, patternMaxHeight } = this.getPatternExtent(pattern);
     const padding = 20 + this.edgeHeight;
     const lowerBound = -min + padding;
-    const upperBound = gameSettings.height - max - padding - this.maxHeight;
+    const upperBound = gameSettings.height - max - padding - patternMaxHeight;
     return lowerBound + Math.random() * (upperBound - lowerBound);
   }
   spawnCoin(y) {
@@ -66,18 +74,25 @@ class SegmentFactory extends EntityFactory {
     );
   }
   spawnZapper(y, isRotated = false) {
+    const hw = isRotated
+      ? this.zapperData.hitboxHeight
+      : this.zapperData.hitboxWidth;
+    const hh = isRotated
+      ? this.zapperData.hitboxWidth
+      : this.zapperData.hitboxHeight;
+
     return new Zapper(
       y + this.offsetY,
       this.zapperData.width,
       this.zapperData.height,
-      this.zapperData.hitboxWidth,
-      this.zapperData.hitboxHeight,
+      hw, // Pass the dynamically swapped width
+      hh, // Pass the dynamically swapped height
       5,
       this.entities,
       this.collisions,
       this.events,
       this.scrollSpeed,
-      isRotated,
+      isRotated, // Pass the rotation boolean so the sprite knows to rotate
     );
   }
   spawn() {
@@ -87,8 +102,6 @@ class SegmentFactory extends EntityFactory {
     for (const type of Object.keys(step)) {
       for (const y of step[type]) {
         const entity = this.entityBuilders[type](y);
-        console.log(this.offsetY);
-
         this.entities.register(entity);
       }
     }

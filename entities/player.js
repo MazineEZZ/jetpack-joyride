@@ -95,8 +95,8 @@ class Player extends Rect {
   }
   draw(ctx) {
     //* Hitbox
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    // ctx.fillStyle = this.color;
+    // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     //* Sprite
     this.animation.position = this.position;
     this.animation.draw(ctx, this.width, this.height);
