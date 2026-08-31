@@ -8,7 +8,6 @@ class SegmentFactory extends EntityFactory {
   constructor(entities, collisions, events) {
     super(entities, collisions, events);
     this.lastDistance = 0;
-    this.scrollSpeed = gameSettings.scrollSpeed;
     this.coinData = coinData;
     this.zapperData = zapperData;
     this.edgeHeight = gameSettings.edgeHeight;
@@ -117,7 +116,8 @@ class SegmentFactory extends EntityFactory {
       this.ctr = 0;
     }
   }
-  update(dt, distance) {
+  update(dt, distance, scrollSpeed) {
+    this.scrollSpeed = scrollSpeed;
     if (
       distance - this.lastDistance > this.distanceBetween &&
       !this.isSpawning

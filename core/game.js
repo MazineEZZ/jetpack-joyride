@@ -34,6 +34,7 @@ class Game {
     this.score = 0;
     this.distance = 0;
     this.scrollSpeed = gameSettings.scrollSpeed;
+    this.difficulty = 2;
 
     // Initial Setup
     this.canvas.width = gameSettings.width;
@@ -134,6 +135,7 @@ class Game {
       this.entities,
       this.collisions,
       this.events,
+      this.scrollSpeed,
     );
 
     this.factories.register(segmentFactory);
@@ -226,14 +228,15 @@ class Game {
     // this.debugGrid();
   }
   update(dt) {
+    this.scrollSpeed += this.difficulty * dt;
     // Background
-    this.background.update(dt);
+    this.background.update(dt, this.scrollSpeed);
     // Distance
     this.distance += this.scrollSpeed * dt;
     this.metersCrossed = convertPxToMeters(this.distance);
     this.distanceCtrLabel.setText(`${pad(this.metersCrossed, 4)} M`);
     // Factories
-    this.factories.update(dt, this.distance);
+    this.factories.update(dt, this.distance, this.scrollSpeed);
     // Particles
     this.particles.update(dt);
     // Entities
@@ -264,6 +267,7 @@ class Game {
     this.stop();
     this.score = 0;
     this.distance = 0;
+    this.scrollSpeed = gameSettings.scrollSpeed;
     this.audio.pauseSounds();
     this.audio = new AudioSystem();
     this.entities = new EntityRegistry();

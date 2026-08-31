@@ -10,7 +10,6 @@ class Background extends Sprite {
 class ScrollingBackground extends Background {
   constructor(src, x, y, width, height) {
     super(src, x, y, width, height);
-    this.scrollSpeed = gameSettings.scrollSpeed;
   }
   draw(ctx) {
     ctx.drawImage(
@@ -28,8 +27,8 @@ class ScrollingBackground extends Background {
       this.height,
     );
   }
-  update(dt) {
-    this.position.x -= this.scrollSpeed * dt;
+  update(dt, scrollSpeed) {
+    this.position.x -= scrollSpeed * dt;
 
     if (this.position.x <= -this.width) this.position.x += this.width;
   }
