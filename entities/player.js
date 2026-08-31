@@ -3,6 +3,7 @@ import { gameSettings, physicsSettings } from "../data/settings.js";
 import { Rect } from "../core/rect.js";
 import { Vector2 } from "../core/vector.js";
 import { AnimatedSprite } from "../systems/animation.js";
+import { ParticleManager } from "../systems/particles.js";
 
 class Player extends Rect {
   constructor(
@@ -16,6 +17,7 @@ class Player extends Rect {
     collision,
     input,
     events,
+    particles,
     color = "red",
   ) {
     super(x, y, hitboxWidth, hitboxHeight, zIndex, color);
@@ -26,6 +28,18 @@ class Player extends Rect {
     this.input = input;
     this.events = events;
     this.wasThrusting = false;
+    this.particleManager = new ParticleManager(
+      this.position.x,
+      this.position.y,
+      10,
+      20,
+      "spray",
+      300,
+      30,
+      2,
+      particles,
+      "fire",
+    );
     this.animation = new AnimatedSprite(
       "../assets/images/barry-spritesheet.png",
       this.position.x,
@@ -45,6 +59,11 @@ class Player extends Rect {
     if (isThrusting) {
       this.velocity.y -= this.thrust * delta;
       this.animation.select("fly");
+      this.particleManager.update(
+        delta,
+        this.position.x,
+        this.position.y + this.height - 20,
+      );
     } else if (this.onGround()) {
       this.animation.select("run");
     }

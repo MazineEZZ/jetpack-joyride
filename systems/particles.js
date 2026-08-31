@@ -14,6 +14,7 @@ class Particle extends Rect {
     zIndex,
     lifetime,
     particles,
+    speed,
     color = "red",
   ) {
     super(x, y, width, height, zIndex, color);
@@ -24,7 +25,7 @@ class Particle extends Rect {
     // Properties
     this.rgb = colorToRGB(color);
     this.opacity = 1;
-    this.speed = 100;
+    this.speed = speed;
     this.lifetime = lifetime;
     this.timer = 0;
   }
@@ -55,21 +56,46 @@ class Particle extends Rect {
 }
 
 class ParticleManager {
-  constructor(x, y, width, height, pattern, amount, lifetime, particles) {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    pattern,
+    speed,
+    amount,
+    lifetime,
+    particles,
+    palette,
+  ) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.palette = palette;
     this.secondPerParticles = 1 / amount; // Seconds per particles
     this.pattern = pattern;
     this.lifetime = lifetime;
     this.particles = particles;
+    this.speed = speed;
     this.timer = 0;
+    this.palettes = {
+      fire: ["#f70000", "#f75700", "#f79500", "#f7c700", "#f7e007"],
+    };
   }
   generateAngle(upperBound, lowerBound) {
     return lowerBound + Math.random() * (upperBound - lowerBound);
   }
-  select() {
+  selectColor() {
+    try {
+      const len = this.palettes[this.palette].length;
+      const colorIndex = Math.floor(Math.random() * len);
+      return this.palettes[this.palette][colorIndex];
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  selectAngle() {
     let vX, vY;
     if (this.pattern === "spray") {
       const angle = this.generateAngle(315, 225);
@@ -81,11 +107,12 @@ class ParticleManager {
     }
     return { vX, vY };
   }
-  spawn() {
-    const { vX, vY } = this.select();
+  spawn(x, y) {
+    const { vX, vY } = this.selectAngle();
+    const color = this.selectColor();
     const particle = new Particle(
-      this.x,
-      this.y,
+      x,
+      y,
       this.width,
       this.height,
       vX,
@@ -93,14 +120,16 @@ class ParticleManager {
       4,
       this.lifetime,
       this.particles,
+      this.speed,
+      color,
     );
     this.particles.register(particle);
   }
-  update(dt) {
+  update(dt, x, y) {
     this.timer += dt;
     if (this.timer >= this.secondPerParticles) {
       this.timer -= this.secondPerParticles;
-      this.spawn();
+      this.spawn(x, y);
     }
   }
 }

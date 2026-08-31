@@ -5,7 +5,7 @@ const playerData = {
   y: gameSettings.height - gameSettings.edgeHeight,
   width: 80,
   height: 110,
-  hitboxWidth: 60,
+  hitboxWidth: 50,
   hitboxHeight: 90,
   zIndex: 5,
   color: "green",
@@ -21,8 +21,8 @@ const coinData = {
 const zapperData = {
   width: 66 * 1.5,
   height: 162 * 1.5,
-  hitboxWidth: 55 * 1.5,
-  hitboxHeight: 155 * 1.5,
+  hitboxWidth: 50 * 1.5,
+  hitboxHeight: 150 * 1.5,
   color: "red",
 };
 

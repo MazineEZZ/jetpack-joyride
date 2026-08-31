@@ -11,7 +11,7 @@ import { playerData } from "../data/entityData.js";
 import { SegmentFactory } from "../entities/segmentFactory.js";
 import { Background, ScrollingBackground } from "./background.js";
 import { convertPxToMeters, pad } from "../utils/utils.js";
-import { ParticleManager, ParticleSystem } from "../systems/particles.js";
+import { ParticleSystem } from "../systems/particles.js";
 
 class Game {
   constructor(canvas) {
@@ -123,6 +123,7 @@ class Game {
       this.collisions,
       this.input,
       this.events,
+      this.particles,
       playerData.color,
     );
     this.collisions.register(player);
@@ -175,19 +176,6 @@ class Game {
     this.spawn();
 
     this.entities.sortByLayers();
-
-    // ! TEST
-    this.particleManager = new ParticleManager(
-      20,
-      370,
-      10,
-      20,
-      "spray",
-      10,
-      4,
-      this.particles,
-      "yellow",
-    );
 
     // UI
     this.loadUI();
@@ -248,7 +236,6 @@ class Game {
     this.factories.update(dt, this.distance);
     // Particles
     this.particles.update(dt);
-    this.particleManager.update(dt);
     // Entities
     this.entities.update(dt);
   }
