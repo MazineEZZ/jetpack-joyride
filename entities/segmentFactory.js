@@ -9,18 +9,17 @@ class SegmentFactory extends EntityFactory {
     super(entities, collisions, events);
     this.lastDistance = 0;
     this.scrollSpeed = gameSettings.scrollSpeed;
-    this.coinSize = coinData.size;
-    this.zapperWidth = zapperData.width;
-    this.zapperHeight = zapperData.height;
+    this.coinData = coinData;
+    this.zapperData = zapperData;
     this.edgeHeight = gameSettings.edgeHeight;
     // Factory
+    this.maxHeight = Math.max(this.coinData.size, this.zapperData.height);
     this.selected = 0;
     this.patterns = patterns;
     this.offsetY = this.generateY();
     this.ctr = 0;
     this.isSpawning = false;
-    this.distanceBetween = 200;
-    this.maxHeight = Math.max(this.coinSize, this.zapperHeight);
+    this.distanceBetween = 600;
     this.entityBuilders = {
       coin: (y) => this.spawnCoin(y),
       zapperV: (y) => this.spawnZapper(y),
@@ -57,8 +56,8 @@ class SegmentFactory extends EntityFactory {
   spawnCoin(y) {
     return new Coin(
       y + this.offsetY,
-      this.coinSize,
-      this.coinSize,
+      this.coinData.size,
+      this.coinData.size,
       3,
       this.entities,
       this.collisions,
@@ -69,8 +68,10 @@ class SegmentFactory extends EntityFactory {
   spawnZapper(y, isRotated = false) {
     return new Zapper(
       y + this.offsetY,
-      this.zapperWidth,
-      this.zapperHeight,
+      this.zapperData.width,
+      this.zapperData.height,
+      this.zapperData.hitboxWidth,
+      this.zapperData.hitboxHeight,
       5,
       this.entities,
       this.collisions,
@@ -86,6 +87,7 @@ class SegmentFactory extends EntityFactory {
     for (const type of Object.keys(step)) {
       for (const y of step[type]) {
         const entity = this.entityBuilders[type](y);
+        console.log(this.offsetY);
 
         this.entities.register(entity);
       }

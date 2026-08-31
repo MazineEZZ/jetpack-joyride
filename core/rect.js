@@ -10,7 +10,7 @@ class Rect {
   }
   draw(ctx) {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.fillRect(this.drawX, this.drawY, this.width, this.height);
   }
   update(dt) {}
   onHit() {}

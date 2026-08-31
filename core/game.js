@@ -180,11 +180,13 @@ class Game {
     this.particleManager = new ParticleManager(
       20,
       370,
-      20,
-      20,
       10,
-      1.5,
+      20,
+      "spray",
+      10,
+      4,
       this.particles,
+      "yellow",
     );
 
     // UI

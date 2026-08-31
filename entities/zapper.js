@@ -7,6 +7,8 @@ class Zapper extends Hazard {
     y,
     width,
     height,
+    hitboxWidth,
+    hitboxHeight,
     zIndex,
     entities,
     collisions,
@@ -15,17 +17,30 @@ class Zapper extends Hazard {
     isRotated,
     color = "red",
   ) {
-    super(y, width, height, zIndex, entities, collisions, events, speed, color);
+    super(
+      y,
+      hitboxWidth,
+      hitboxHeight,
+      zIndex,
+      entities,
+      collisions,
+      events,
+      speed,
+      color,
+    );
+
     this.animation = new AnimatedSprite(
       "../assets/images/zapper-spritesheet.png",
       this.position.x,
       this.position.y,
-      this.width,
-      this.height,
+      width,
+      height,
       660 / 10,
       162,
       10,
     );
+    this.hitboxWidth = hitboxWidth;
+    this.hitboxHeight = hitboxHeight;
     this.animation.add("zapping", 0, 10);
     this.animation.isRotated = isRotated;
   }
@@ -36,11 +51,16 @@ class Zapper extends Hazard {
   }
   draw(ctx) {
     //* Hitbox
-    // ctx.fillStyle = this.color;
-    // ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(
+      this.position.x,
+      this.position.y,
+      this.hitboxWidth,
+      this.hitboxHeight,
+    );
     //* Sprite
     this.animation.position = this.position;
-    this.animation.draw(ctx, this.width, this.height);
+    this.animation.draw(ctx, this.hitboxWidth, this.hitboxHeight);
   }
 }
 
