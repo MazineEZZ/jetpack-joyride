@@ -114,7 +114,7 @@ class Game {
     }
   }
   spawn() {
-    const player = new Player(
+    this.player = new Player(
       playerData.x,
       playerData.y,
       playerData.width,
@@ -128,8 +128,8 @@ class Game {
       this.particles,
       playerData.color,
     );
-    this.collisions.register(player);
-    this.entities.register(player);
+    this.collisions.register(this.player);
+    this.entities.register(this.player);
 
     // Factories
     const segmentFactory = new SegmentFactory(
@@ -254,7 +254,12 @@ class Game {
     this.metersCrossed = convertPxToMeters(this.distance);
     this.distanceCtrLabel.setText(`${pad(this.metersCrossed, 4)} M`);
     // Factories
-    this.factories.update(dt, this.distance, this.scrollSpeed);
+    this.factories.update(
+      dt,
+      this.distance,
+      this.scrollSpeed,
+      this.player.position.y,
+    );
     // Particles
     this.particles.update(dt);
     // Entities

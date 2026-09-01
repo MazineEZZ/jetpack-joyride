@@ -34,13 +34,14 @@ const zapperData = {
   color: "red",
 };
 
+const f = 1.2;
 const rocketData = {
-  width: 132,
-  height: 45,
-  hitboxWidth: 132,
-  hitboxHeight: 45,
+  width: 132 * f,
+  height: 45 * f,
+  hitboxWidth: 132 * f,
+  hitboxHeight: 45 * f,
   zIndex: 4,
-  speed: 1000,
+  speed: 800, // 1200
   src: spritesDir + "rocket.png",
   spriteWidth: 660 / 5,
   spriteHeight: 45,

@@ -1,13 +1,16 @@
 import { rocketData } from "../data/entityData.js";
+import { gameSettings } from "../data/settings.js";
 import { EntityFactory } from "./entityFactory.js";
 import { Rocket } from "./rocket.js";
+import { RocketWarning } from "./rocketWarning.js";
 
 class RocketFactory extends EntityFactory {
   constructor(entities, collisions, events) {
     super(entities, collisions, events);
+    this.rockets = [];
     this.rocketData = rocketData;
     this.lastDistance = 0;
-    this.distanceBetween = 1200;
+    this.distanceBetween = this.generateDistanceBetween();
   }
   spawnRocket(y) {
     return new Rocket(
@@ -27,16 +30,25 @@ class RocketFactory extends EntityFactory {
       this.rocketData.spriteHeight,
     );
   }
-  spawn() {
-    const rocket = this.spawnRocket(30);
-    this.entities.register(rocket);
+  generateDistanceBetween() {
+    return 2000 + Math.random() * (4000 - 2000);
   }
-  update(dt, distance, scrollSpeed) {
-    if (
-      distance - this.lastDistance > this.distanceBetween &&
-      !this.isSpawning
-    ) {
-      this.spawn();
+  spawn(playerY) {
+    const rocket = this.spawnRocket(playerY);
+    rocket.position.x += 2000;
+    this.rockets.push(rocket);
+    this.entities.register(rocket);
+
+    this.distanceBetween = this.generateDistanceBetween();
+  }
+  update(dt, distance, scrollSpeed, playerY) {
+    this.rockets.forEach((rocket) => {
+      if (rocket.position.x > gameSettings.width) {
+        rocket.position.y = playerY;
+      }
+    });
+    if (distance - this.lastDistance > this.distanceBetween) {
+      this.spawn(playerY);
       this.lastDistance += this.distanceBetween;
     }
   }
