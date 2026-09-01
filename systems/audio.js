@@ -6,17 +6,20 @@ class AudioSystem {
 
     this.sounds = [];
 
-    this.collect = this.add("../assets/sounds/coin-pickup.mp3");
-    this.jetpackStarted = this.add("../assets/sounds/jetpack-started.mp3");
-    this.jetpackOn = this.add("../assets/sounds/jetpack_firelp.wav");
-    this.jetpackOff = this.add("../assets/sounds/jetpack_stop.wav");
-    this.running = this.add("../assets/sounds/running.wav");
-    this.land = this.add("../assets/sounds/land.wav");
+    this.collect = this.add("coin-pickup.mp3");
+    this.jetpackStarted = this.add("jetpack-started.mp3");
+    this.jetpackOn = this.add("jetpack_firelp.wav");
+    this.jetpackOff = this.add("jetpack_stop.wav");
+    this.running = this.add("running.wav");
+    this.land = this.add("land.wav");
+    this.rocketLaunch = this.add("rocket-launch.wav");
+    this.rocketWarning = this.add("rocket-warning.wav");
 
     this.adjustVolume();
   }
   add(src) {
-    const audio = new Audio(src);
+    const soundDir = "../assets/sounds/";
+    const audio = new Audio(soundDir + src);
 
     this.sounds.push(audio);
 
@@ -54,6 +57,12 @@ class AudioSystem {
   }
   playLand() {
     this.land.play();
+  }
+  playRocketWarning() {
+    this.rocketWarning.play();
+  }
+  playRocketLaunch() {
+    this.rocketLaunch.play();
   }
 }
 

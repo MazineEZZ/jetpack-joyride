@@ -203,6 +203,12 @@ class Game {
       this.ui.add(this.messageLabel);
       setTimeout(() => this.restart(), 1000);
     });
+    this.events.on("rocketWarning", () => {
+      this.audio.playRocketWarning();
+    });
+    this.events.on("rocketLaunched", () => {
+      this.audio.playRocketLaunch();
+    });
     this.events.on("playerRunning", () => {
       this.audio.playRunning();
     });

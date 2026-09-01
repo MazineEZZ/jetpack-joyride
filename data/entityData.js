@@ -48,6 +48,15 @@ const rocketData = {
   color: "red",
 };
 
+const rocketWarningData = {
+  width: 198 / 2.5,
+  height: 188 / 2.5,
+  zIndex: 5,
+  src: spritesDir + "rocket-warning.png",
+  spriteWidth: 198,
+  spriteHeight: 376 / 2,
+};
+
 const stepDist = 54;
 
 const patterns = [
@@ -220,4 +229,11 @@ const patterns = [
   },
 ];
 
-export { playerData, coinData, zapperData, rocketData, patterns };
+export {
+  playerData,
+  coinData,
+  zapperData,
+  rocketData,
+  rocketWarningData,
+  patterns,
+};

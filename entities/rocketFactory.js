@@ -31,7 +31,7 @@ class RocketFactory extends EntityFactory {
     );
   }
   generateDistanceBetween() {
-    return 2000 + Math.random() * (4000 - 2000);
+    return 5000 + Math.random() * (10000 - 5000);
   }
   spawn(playerY) {
     const rocket = this.spawnRocket(playerY);
@@ -45,6 +45,7 @@ class RocketFactory extends EntityFactory {
     this.rockets.forEach((rocket) => {
       if (rocket.position.x > gameSettings.width) {
         rocket.position.y = playerY;
+        rocket.speed = this.rocketData.speed * 1.5;
       }
     });
     if (distance - this.lastDistance > this.distanceBetween) {
