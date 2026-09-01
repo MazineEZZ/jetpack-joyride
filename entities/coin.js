@@ -1,4 +1,4 @@
-import { ScrollableEntity } from "./scrollableEntity.js";
+import { ScrollableEntity } from "../core/scrollableEntity.js";
 import { physicsSettings } from "../data/settings.js";
 import { AnimatedSprite } from "../systems/animation.js";
 
@@ -12,21 +12,25 @@ class Coin extends ScrollableEntity {
     collision,
     events,
     speed,
+    src = "",
     color = "yellow",
   ) {
     super(y, width, height, zIndex, entities, collision, speed, color);
     this.events = events;
-    this.animation = new AnimatedSprite(
-      "../assets/images/coin-spritesheet.png",
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height,
-      48 / 4,
-      12,
-      10,
-    );
-    this.animation.add("spin", 0, 3);
+    this.hasAnimation = src !== "";
+    if (this.hasAnimation) {
+      this.animation = new AnimatedSprite(
+        src,
+        this.position.x,
+        this.position.y,
+        this.width,
+        this.height,
+        48 / 4,
+        12,
+        10,
+      );
+      this.animation.add("spin", 0, 3);
+    }
   }
   onHit(other) {
     this.entities.unregister(this);

@@ -1,4 +1,5 @@
 import { Hazard } from "./hazard.js";
+import { AnimatedSprite } from "../systems/animation.js";
 
 class Zapper extends Hazard {
   constructor(
@@ -32,7 +33,7 @@ class Zapper extends Hazard {
       color,
     );
     if (this.hasAnimation) {
-      this.animation.add("zapping", 0, 10);
+      this.animation.add("rocketing", 0, 10);
     }
   }
 }

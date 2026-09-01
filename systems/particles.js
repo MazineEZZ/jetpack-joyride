@@ -29,7 +29,7 @@ class Particle extends Rect {
     this.speed = speed;
     this.lifetime = lifetime;
     this.timer = 0;
-    this.fadePower = 1500;
+    this.fadePower = 1000;
   }
   update(dt) {
     this.position.x += this.velocity.x * dt * this.speed;

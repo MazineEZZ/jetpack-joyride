@@ -11,10 +11,14 @@ const playerData = {
   color: "green",
 };
 
-const S = 40;
+const spritesDir = "../assets/sprites/";
 
+const S = 40;
 const coinData = {
   size: S,
+  hitboxSize: S,
+  zIndex: 3,
+  src: spritesDir + "coin.png",
   color: "yellow",
 };
 
@@ -23,6 +27,19 @@ const zapperData = {
   height: 162 * 1.5,
   hitboxWidth: 50 * 1.5,
   hitboxHeight: 150 * 1.5,
+  zIndex: 3,
+  src: spritesDir + "zapper.png",
+  color: "red",
+};
+
+const rocketData = {
+  width: 200,
+  height: 100,
+  hitboxWidth: 200,
+  hitboxHeight: 100,
+  zIndex: 4,
+  speed: 2000,
+  src: spritesDir + "rocket.png",
   color: "red",
 };
 
@@ -198,4 +215,4 @@ const patterns = [
   },
 ];
 
-export { playerData, coinData, zapperData, patterns };
+export { playerData, coinData, zapperData, rocketData, patterns };

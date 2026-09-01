@@ -1,4 +1,4 @@
-import { Rect } from "../core/rect.js";
+import { Rect } from "./rect.js";
 import { gameSettings, physicsSettings } from "../data/settings.js";
 
 class ScrollableEntity extends Rect {

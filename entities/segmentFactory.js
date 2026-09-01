@@ -7,17 +7,17 @@ import { Zapper } from "./zapper.js";
 class SegmentFactory extends EntityFactory {
   constructor(entities, collisions, events) {
     super(entities, collisions, events);
-    this.lastDistance = 0;
     this.coinData = coinData;
     this.zapperData = zapperData;
     this.edgeHeight = gameSettings.edgeHeight;
     // Factory
+    this.lastDistance = 0;
+    this.distanceBetween = 600;
     this.selected = 0;
     this.patterns = patterns;
     this.offsetY = this.generateY();
     this.ctr = 0;
     this.isSpawning = false;
-    this.distanceBetween = 600;
     this.entityBuilders = {
       coin: (y) => this.spawnCoin(y),
       zapperV: (y) => this.spawnZapper(y),
@@ -70,6 +70,7 @@ class SegmentFactory extends EntityFactory {
       this.collisions,
       this.events,
       this.scrollSpeed,
+      this.coinData.src,
     );
   }
   spawnZapper(y, isRotated = false) {
@@ -84,14 +85,15 @@ class SegmentFactory extends EntityFactory {
       y + this.offsetY,
       this.zapperData.width,
       this.zapperData.height,
-      hw, // Pass the dynamically swapped width
-      hh, // Pass the dynamically swapped height
+      hw,
+      hh,
       5,
+      this.scrollSpeed,
       this.entities,
       this.collisions,
       this.events,
-      this.scrollSpeed,
-      isRotated, // Pass the rotation boolean so the sprite knows to rotate
+      isRotated,
+      this.zapperData.src,
     );
   }
   spawn() {

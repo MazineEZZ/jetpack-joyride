@@ -12,6 +12,7 @@ import { SegmentFactory } from "../entities/segmentFactory.js";
 import { Background, ScrollingBackground } from "./background.js";
 import { convertPxToMeters, pad } from "../utils/utils.js";
 import { ParticleSystem } from "../systems/particles.js";
+import { RocketFactory } from "../entities/rocketFactory.js";
 
 class Game {
   constructor(canvas) {
@@ -135,10 +136,16 @@ class Game {
       this.entities,
       this.collisions,
       this.events,
-      this.scrollSpeed,
+    );
+
+    const rocketFactory = new RocketFactory(
+      this.entities,
+      this.collisions,
+      this.events,
     );
 
     this.factories.register(segmentFactory);
+    this.factories.register(rocketFactory);
   }
   loadUI() {
     const fontName = "jjFont";
