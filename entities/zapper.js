@@ -14,6 +14,8 @@ class Zapper extends Hazard {
     events,
     isRotated,
     src = "",
+    spriteWidth,
+    spriteHeight,
     color = "red",
   ) {
     super(
@@ -29,6 +31,8 @@ class Zapper extends Hazard {
       events,
       isRotated,
       src,
+      spriteWidth,
+      spriteHeight,
       color,
     );
     if (this.hasAnimation) {

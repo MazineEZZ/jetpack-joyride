@@ -1,6 +1,6 @@
 import { rocketData } from "../data/entityData.js";
 import { EntityFactory } from "./entityFactory.js";
-import { Hazard } from "./hazard.js";
+import { Rocket } from "./rocket.js";
 
 class RocketFactory extends EntityFactory {
   constructor(entities, collisions, events) {
@@ -10,7 +10,7 @@ class RocketFactory extends EntityFactory {
     this.distanceBetween = 1200;
   }
   spawnRocket(y) {
-    return new Hazard(
+    return new Rocket(
       y,
       this.rocketData.width,
       this.rocketData.height,
@@ -23,6 +23,8 @@ class RocketFactory extends EntityFactory {
       this.events,
       false,
       this.rocketData.src,
+      this.rocketData.spriteWidth,
+      this.rocketData.spriteHeight,
     );
   }
   spawn() {

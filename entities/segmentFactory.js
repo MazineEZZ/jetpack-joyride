@@ -94,6 +94,8 @@ class SegmentFactory extends EntityFactory {
       this.events,
       isRotated,
       this.zapperData.src,
+      this.zapperData.spriteWidth,
+      this.zapperData.spriteHeight,
     );
   }
   spawn() {

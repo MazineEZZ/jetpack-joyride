@@ -29,17 +29,21 @@ const zapperData = {
   hitboxHeight: 150 * 1.5,
   zIndex: 3,
   src: spritesDir + "zapper.png",
+  spriteWidth: 660 / 10,
+  spriteHeight: 162,
   color: "red",
 };
 
 const rocketData = {
-  width: 200,
-  height: 100,
-  hitboxWidth: 200,
-  hitboxHeight: 100,
+  width: 132,
+  height: 45,
+  hitboxWidth: 132,
+  hitboxHeight: 45,
   zIndex: 4,
-  speed: 2000,
+  speed: 1000,
   src: spritesDir + "rocket.png",
+  spriteWidth: 660 / 5,
+  spriteHeight: 45,
   color: "red",
 };
 

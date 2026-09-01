@@ -16,6 +16,8 @@ class Hazard extends ScrollableEntity {
     events,
     isRotated,
     src,
+    spriteWidth,
+    spriteHeight,
     color = "red",
   ) {
     super(
@@ -39,11 +41,9 @@ class Hazard extends ScrollableEntity {
         this.position.y,
         width,
         height,
-        660 / 10,
-        162,
-        10,
+        spriteWidth,
+        spriteHeight,
       );
-      this.animation.add("zapping", 0, 10);
       this.animation.isRotated = isRotated;
     }
   }

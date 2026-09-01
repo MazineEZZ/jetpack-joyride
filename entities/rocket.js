@@ -1,7 +1,7 @@
 import { Hazard } from "./hazard.js";
 import { AnimatedSprite } from "../systems/animation.js";
 
-class Zapper extends Hazard {
+class Rocket extends Hazard {
   constructor(
     y,
     width,
@@ -15,6 +15,8 @@ class Zapper extends Hazard {
     events,
     isRotated,
     src = "",
+    spriteWidth,
+    spriteHeight,
     color = "red",
   ) {
     super(
@@ -30,12 +32,14 @@ class Zapper extends Hazard {
       events,
       isRotated,
       src,
+      spriteWidth,
+      spriteHeight,
       color,
     );
     if (this.hasAnimation) {
-      this.animation.add("rocketing", 0, 10);
+      this.animation.add("rocketing", 0, 5);
     }
   }
 }
 
-export { Zapper };
+export { Rocket };
