@@ -21,6 +21,7 @@ class RocketFactory extends EntityFactory {
       this.rocketData.hitboxWidth,
       this.rocketData.hitboxHeight,
       this.rocketData.zIndex,
+      this.rocketData.type,
       this.rocketData.speed,
       this.entities,
       this.collisions,
@@ -40,6 +41,8 @@ class RocketFactory extends EntityFactory {
     rocket.position.x += 3000;
     this.rockets.push(rocket);
     this.entities.register(rocket);
+    this.entities.sortByLayers();
+    this.collisions.register(rocket);
 
     this.distanceBetween = this.generateDistanceBetween();
   }

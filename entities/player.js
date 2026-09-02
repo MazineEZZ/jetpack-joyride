@@ -4,6 +4,7 @@ import { Rect } from "../core/rect.js";
 import { Vector2 } from "../core/vector.js";
 import { AnimatedSprite } from "../systems/animation.js";
 import { ParticleManager } from "../systems/particles.js";
+import { playerData } from "../data/entityData.js";
 
 class Player extends Rect {
   constructor(
@@ -14,13 +15,14 @@ class Player extends Rect {
     hitboxWidth,
     hitboxHeight,
     zIndex,
+    type,
     collision,
     input,
     events,
     particles,
     color = "red",
   ) {
-    super(x, y, hitboxWidth, hitboxHeight, zIndex, color);
+    super(x, y, hitboxWidth, hitboxHeight, zIndex, type, color);
     this.gravity = new Vector2(0, physicsSettings.gravity);
     this.thrust = physicsSettings.thrust;
     this.velocity = new Vector2(0, 0);
@@ -53,8 +55,15 @@ class Player extends Rect {
     this.animation.add("fly", 1, 1);
     this.animation.add("run", 0, 3);
     this.wasOnAit = false;
+    this.isDead = false;
   }
   update(delta) {
+    if (this.isDead) {
+      const fallSpeed = 300;
+      if (this.onGround()) return;
+      this.position.x += fallSpeed * delta;
+      this.position.y += fallSpeed * delta;
+    }
     const isThrusting = this.input.isDown("go_up");
 
     if (isThrusting) {
@@ -95,7 +104,7 @@ class Player extends Rect {
 
     this.animation.update(delta);
 
-    this.collision.check(this);
+    if (!this.isDead) this.collision.check(this);
   }
   onGround() {
     return (
@@ -117,7 +126,10 @@ class Player extends Rect {
     }
   }
   onHit(entity) {
-    separate(this, entity);
+    this.collision.unregister(this);
+    this.isDead = true;
+    this.events.emit("playerDied", { hazard: this });
+    console.log(entity.type);
   }
   draw(ctx) {
     //* Hitbox

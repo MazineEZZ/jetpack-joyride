@@ -10,6 +10,7 @@ class Hazard extends ScrollableEntity {
     hitboxWidth,
     hitboxHeight,
     zIndex,
+    type,
     speed,
     entities,
     collisions,
@@ -25,6 +26,7 @@ class Hazard extends ScrollableEntity {
       hitboxWidth,
       hitboxHeight,
       zIndex,
+      type,
       entities,
       collisions,
       speed,
@@ -48,7 +50,7 @@ class Hazard extends ScrollableEntity {
     }
   }
   onHit(other) {
-    this.events.emit("playerDied", { hazard: this });
+    // this.events.emit("playerDied", { hazard: this });
   }
   update(dt) {
     super.update(dt);

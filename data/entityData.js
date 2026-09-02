@@ -1,6 +1,7 @@
 import { gameSettings } from "./settings.js";
 
 const playerData = {
+  type: "player",
   x: 400,
   y: gameSettings.height - gameSettings.edgeHeight,
   width: 80,
@@ -15,6 +16,7 @@ const spritesDir = "../assets/sprites/";
 
 const S = 40;
 const coinData = {
+  type: "coin",
   size: S,
   hitboxSize: S,
   zIndex: 3,
@@ -23,6 +25,7 @@ const coinData = {
 };
 
 const zapperData = {
+  type: "zapper",
   width: 66 * 1.5,
   height: 162 * 1.5,
   hitboxWidth: 50 * 1.5,
@@ -36,6 +39,7 @@ const zapperData = {
 
 const f = 1.2;
 const rocketData = {
+  type: "rocket",
   width: 132 * f,
   height: 45 * f,
   hitboxWidth: 132 * f,

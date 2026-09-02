@@ -14,6 +14,7 @@ class Rocket extends Hazard {
     hitboxWidth,
     hitboxHeight,
     zIndex,
+    type,
     speed,
     entities,
     collisions,
@@ -32,6 +33,7 @@ class Rocket extends Hazard {
       hitboxWidth,
       hitboxHeight,
       zIndex,
+      type,
       speed,
       entities,
       collisions,
@@ -86,8 +88,6 @@ class Rocket extends Hazard {
       this.isWarned = true;
       this.warning.animation.select("final-warning");
       this.events.emit("rocketWarning");
-      this.checkWarn = false;
-      this.warnState = false;
     }
     if (this.position.x <= gameSettings.width && !this.isFired) {
       this.isFired = true;

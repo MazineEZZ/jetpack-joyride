@@ -8,6 +8,7 @@ class Coin extends ScrollableEntity {
     width,
     height,
     zIndex,
+    type,
     entities,
     collision,
     events,
@@ -15,7 +16,7 @@ class Coin extends ScrollableEntity {
     src = "",
     color = "yellow",
   ) {
-    super(y, width, height, zIndex, entities, collision, speed, color);
+    super(y, width, height, zIndex, type, entities, collision, speed, color);
     this.events = events;
     this.hasAnimation = src !== "";
     if (this.hasAnimation) {

@@ -19,7 +19,7 @@ class Particle extends Rect {
     speed,
     color = "red",
   ) {
-    super(x, y, width, height, zIndex, color);
+    super(x, y, width, height, zIndex, "particle", color);
     this.velocity = new Vector2(vX, vY);
     this.velocity = this.velocity.normalize();
     this.particles = particles;
@@ -89,7 +89,7 @@ class ParticleManager {
     this.timer = 0;
     this.palette = palette;
     this.palettes = {
-      fire: "magenta",
+      fire: "#f70000",
       smoke: "#998c83",
     };
   }
@@ -97,7 +97,7 @@ class ParticleManager {
     return lowerBound + Math.random() * (upperBound - lowerBound);
   }
   selectColor() {
-    this.palettes[this.palette];
+    return this.palettes[this.palette];
   }
   getVectorCoords(upperAngle, lowerAngle) {
     const angle = this.generateRandom(upperAngle, lowerAngle);

@@ -7,16 +7,16 @@ class ScrollableEntity extends Rect {
     width,
     height,
     zIndex,
+    type,
     entities,
     collision,
     speed,
     color = "yellow",
   ) {
-    super(0, y, width, height, zIndex, color);
+    super(0, y, width, height, zIndex, type, color);
     this.speed = speed;
     this.offset = physicsSettings.offset;
     this.position.x = gameSettings.width + this.width + this.offset;
-
     this.entities = entities;
     this.collision = collision;
   }
@@ -29,8 +29,13 @@ class ScrollableEntity extends Rect {
   }
   onDestroy() {
     this.entities.unregister(this);
+    this.collision.unregister(this);
   }
-  onHit(other) {}
+  onHit(other) {
+    if (other.type === "player") {
+      this.collision.unregister(this);
+    }
+  }
 }
 
 export { ScrollableEntity };

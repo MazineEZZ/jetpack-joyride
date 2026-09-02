@@ -68,7 +68,8 @@ class SegmentFactory extends EntityFactory {
       y + this.offsetY,
       this.coinData.size,
       this.coinData.size,
-      3,
+      this.coinData.zIndex,
+      this.coinData.type,
       this.entities,
       this.collisions,
       this.events,
@@ -84,13 +85,14 @@ class SegmentFactory extends EntityFactory {
       ? this.zapperData.hitboxWidth
       : this.zapperData.hitboxHeight;
 
-    return new Zapper(
+    const zapper = new Zapper(
       y + this.offsetY,
       this.zapperData.width,
       this.zapperData.height,
       hw,
       hh,
-      5,
+      this.zapperData.zIndex,
+      this.zapperData.type,
       this.scrollSpeed,
       this.entities,
       this.collisions,
@@ -100,6 +102,8 @@ class SegmentFactory extends EntityFactory {
       this.zapperData.spriteWidth,
       this.zapperData.spriteHeight,
     );
+    this.collisions.register(zapper);
+    return zapper;
   }
   spawn() {
     const pattern = this.patterns[this.selected];

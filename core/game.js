@@ -122,6 +122,7 @@ class Game {
       playerData.hitboxWidth,
       playerData.hitboxHeight,
       playerData.zIndex,
+      playerData.type,
       this.collisions,
       this.input,
       this.events,
