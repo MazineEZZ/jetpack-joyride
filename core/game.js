@@ -142,6 +142,7 @@ class Game {
       this.entities,
       this.collisions,
       this.events,
+      this.particles,
     );
 
     this.factories.register(segmentFactory);

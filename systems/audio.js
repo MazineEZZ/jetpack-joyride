@@ -2,7 +2,7 @@ class AudioSystem {
   constructor() {
     this.music = new Audio("../assets/music/main-theme.mp3");
     this.music.loop = true;
-    this.music.volume = 0.3;
+    this.music.volume = 0.1;
 
     this.sounds = [];
 

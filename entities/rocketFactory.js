@@ -5,8 +5,9 @@ import { Rocket } from "./rocket.js";
 import { RocketWarning } from "./rocketWarning.js";
 
 class RocketFactory extends EntityFactory {
-  constructor(entities, collisions, events) {
+  constructor(entities, collisions, events, particles) {
     super(entities, collisions, events);
+    this.particles = particles;
     this.rockets = [];
     this.rocketData = rocketData;
     this.lastDistance = 0;
@@ -24,6 +25,7 @@ class RocketFactory extends EntityFactory {
       this.entities,
       this.collisions,
       this.events,
+      this.particles,
       false,
       this.rocketData.src,
       this.rocketData.spriteWidth,
@@ -35,7 +37,7 @@ class RocketFactory extends EntityFactory {
   }
   spawn(playerY) {
     const rocket = this.spawnRocket(playerY);
-    rocket.position.x += 2000;
+    rocket.position.x += 3000;
     this.rockets.push(rocket);
     this.entities.register(rocket);
 

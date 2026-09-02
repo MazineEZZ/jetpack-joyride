@@ -14,6 +14,7 @@ class Particle extends Rect {
     vY,
     zIndex,
     lifetime,
+    palette,
     particles,
     speed,
     color = "red",
@@ -24,10 +25,11 @@ class Particle extends Rect {
     this.particles = particles;
 
     // Properties
-    this.rgb = colorToRGB("red");
+    this.rgb = colorToRGB(color);
     this.opacity = 1;
     this.speed = speed;
     this.lifetime = lifetime;
+    this.palette = palette;
     this.timer = 0;
     this.fadePower = 1000;
   }
@@ -36,7 +38,7 @@ class Particle extends Rect {
     this.position.y += this.velocity.y * dt * this.speed;
 
     this.opacity -= this.timer / this.lifetime;
-    this.rgb.g += this.fadePower * dt;
+    if (this.palette === "fire") this.rgb.g += this.fadePower * dt;
     this.color = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${this.opacity})`;
 
     this.timer += dt;
@@ -85,44 +87,61 @@ class ParticleManager {
     this.particles = particles;
     this.speed = speed;
     this.timer = 0;
+    this.palette = palette;
     this.palettes = {
-      fire: "#f70000",
+      fire: "magenta",
+      smoke: "#998c83",
     };
   }
-  generateAngle(upperBound, lowerBound) {
+  generateRandom(upperBound, lowerBound) {
     return lowerBound + Math.random() * (upperBound - lowerBound);
   }
   selectColor() {
-    try {
-      return this.palettes[this.palette];
-    } catch (err) {
-      console.error(err);
-    }
+    this.palettes[this.palette];
   }
-  selectAngle() {
-    let vX, vY;
+  getVectorCoords(upperAngle, lowerAngle) {
+    const angle = this.generateRandom(upperAngle, lowerAngle);
+    const rad = toRad(angle);
+    return { vX: Math.cos(rad), vY: -Math.sin(rad) };
+  }
+  generateScale(width, height) {
+    width = this.generateRandom(width, 10);
+    height = this.generateRandom(height, 10);
+    return { width, height };
+  }
+  selectPatternProper() {
+    let properties = {};
     if (this.pattern === "spray") {
-      const angle = this.generateAngle(315, 225);
-      const rad = toRad(angle);
-      vX = Math.cos(rad);
-      vY = -Math.sin(rad);
+      const width = this.width;
+      const height = this.height;
+      Object.assign(properties, this.getVectorCoords(315, 225), {
+        width,
+        height,
+      });
+    } else if (this.pattern === "smoke") {
+      Object.assign(
+        properties,
+        this.getVectorCoords(10, -10),
+        this.generateScale(this.width, this.height),
+      );
     } else {
       console.error("Please select a pattern!");
     }
-    return { vX, vY };
+    return properties;
   }
   spawn(x, y) {
-    const { vX, vY } = this.selectAngle();
+    const { vX, vY, width, height } = this.selectPatternProper();
     const color = this.selectColor();
     const particle = new Particle(
       x,
       y,
-      this.width,
-      this.height,
+      width,
+      height,
       vX,
       vY,
       4,
       this.lifetime,
+      this.palette,
       this.particles,
       this.speed,
       color,

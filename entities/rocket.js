@@ -4,6 +4,7 @@ import { RocketFactory } from "./rocketFactory.js";
 import { gameSettings } from "../data/settings.js";
 import { RocketWarning } from "./rocketWarning.js";
 import { rocketWarningData } from "../data/entityData.js";
+import { ParticleManager } from "../systems/particles.js";
 
 class Rocket extends Hazard {
   constructor(
@@ -17,6 +18,7 @@ class Rocket extends Hazard {
     entities,
     collisions,
     events,
+    particles,
     isRotated,
     src = "",
     spriteWidth,
@@ -54,25 +56,50 @@ class Rocket extends Hazard {
       warningData.spriteWidth,
       warningData.spriteHeight,
     );
+    this.smokeSize = 40;
+    this.particleXOffset = this.width;
+    this.particleYOffset = this.height / 2 - this.smokeSize / 2;
+    this.particleManager = new ParticleManager(
+      this.position.x + this.particleXOffset,
+      this.position.y + this.particleYOffset,
+      this.smokeSize,
+      this.smokeSize,
+      "smoke",
+      200,
+      100,
+      3,
+      particles,
+      "smoke",
+    );
     this.warning.animation.select("incoming");
     this.entities.register(this.warning);
-    this.warnState = false;
-    this.checkWarn = true;
+    this.isWarned = false;
+    this.isFired = false;
   }
   update(dt) {
     super.update(dt);
     this.warning.position.y = this.position.y;
-    if (this.checkWarn)
-      this.warnState = this.position.x <= gameSettings.width + 300;
-    if (this.warnState) {
+    if (
+      this.position.x <= gameSettings.width + this.speed / 3 &&
+      !this.isWarned
+    ) {
+      this.isWarned = true;
       this.warning.animation.select("final-warning");
       this.events.emit("rocketWarning");
       this.checkWarn = false;
       this.warnState = false;
     }
-    if (this.position.x <= gameSettings.width) {
+    if (this.position.x <= gameSettings.width && !this.isFired) {
+      this.isFired = true;
       this.events.emit("rocketLaunched");
       this.entities.unregister(this.warning);
+    }
+    if (this.isFired) {
+      this.particleManager.update(
+        dt,
+        this.position.x + this.particleXOffset,
+        this.position.y + this.particleYOffset,
+      );
     }
   }
 }

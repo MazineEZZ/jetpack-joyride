@@ -25,7 +25,10 @@ class SegmentFactory extends EntityFactory {
     };
   }
   generateDistance() {
-    return Math.max(1000, Math.min(Math.random() * 1500));
+    const min = 1000,
+      max = 2200;
+    const t = (Math.random() + Math.random()) / 2;
+    return min + t * (max - min);
   }
   selectPattern() {
     return Math.round(Math.random() * (this.patterns.length - 1));

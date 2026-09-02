@@ -41,7 +41,7 @@ const rocketData = {
   hitboxWidth: 132 * f,
   hitboxHeight: 45 * f,
   zIndex: 4,
-  speed: 800, // 1200
+  speed: 1200, // 1200
   src: spritesDir + "rocket.png",
   spriteWidth: 660 / 5,
   spriteHeight: 45,
@@ -189,28 +189,9 @@ const patterns = [
     ],
   },
 
-  // 4. Thread the Needle Tunnel
-  // A short, wide horizontal tunnel. Coins are placed exactly in the 180px safe zone.
-  {
-    name: "thread_the_needle",
-    spacing: 240, // Wide horizontal spacing for high speeds
-    steps: [
-      { zapperH: [-100, 200], coin: [70] },
-      { zapperH: [-100, 200], coin: [70] },
-    ],
-  },
-
   // ==========================================
   // ZAPPERS ONLY (Simple Hazards)
   // ==========================================
-
-  // 5. High-Low Slalom
-  // Forces a simple altitude change. Spacing is massive (350) so at high speeds it feels like a gentle wave.
-  {
-    name: "high_low_slalom",
-    spacing: 350,
-    steps: [{ zapperV: [-150] }, { zapperV: [150] }, { zapperV: [-150] }],
-  },
 
   // 6. The Lone Horizontal
   // Just a single wide zapper sitting in space. Player can easily go over or under it.
@@ -218,14 +199,6 @@ const patterns = [
     name: "lone_horizontal",
     spacing: 200,
     steps: [{ zapperH: [0] }],
-  },
-
-  // 7. The Double Gate
-  // Two consecutive vertical gates. No coins to distract the player, just a pure survival check.
-  {
-    name: "double_gate",
-    spacing: 350, // Massive spacing to prevent feeling boxed in
-    steps: [{ zapperV: [-243, 180] }, { zapperV: [-243, 180] }],
   },
 ];
 
