@@ -8,6 +8,8 @@ const playerData = {
   height: 110,
   hitboxWidth: 50,
   hitboxHeight: 90,
+  spriteWidth: 27,
+  spriteHeight: 36,
   zIndex: 5,
   color: "green",
 };

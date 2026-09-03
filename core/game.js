@@ -123,6 +123,8 @@ class Game {
       playerData.hitboxHeight,
       playerData.zIndex,
       playerData.type,
+      playerData.spriteWidth,
+      playerData.spriteHeight,
       this.collisions,
       this.input,
       this.events,
@@ -203,7 +205,10 @@ class Game {
     this.events.on("playerDied", () => {
       this.messageLabel.setText("You lost!");
       this.ui.add(this.messageLabel);
-      setTimeout(() => this.restart(), 1000);
+      setTimeout(() => this.restart(), 2000);
+    });
+    this.events.on("playerElectrocuted", () => {
+      this.audio.playPlayerElectrocuted();
     });
     this.events.on("rocketWarning", () => {
       this.audio.playRocketWarning();
@@ -253,7 +258,11 @@ class Game {
     this.ui.draw(this.ctx);
     // this.debugGrid();
   }
+  decreaseSpeed(dt) {
+    if (this.scrollSpeed >= 0) this.scrollSpeed -= 300 * dt;
+  }
   update(dt) {
+    if (this.player.isDead) this.decreaseSpeed(dt);
     this.scrollSpeed += this.difficulty * dt;
     // Background
     this.background.update(dt, this.scrollSpeed);

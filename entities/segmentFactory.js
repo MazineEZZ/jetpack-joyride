@@ -127,8 +127,17 @@ class SegmentFactory extends EntityFactory {
       this.ctr = 0;
     }
   }
+  updateSpeed() {
+    for (const ent of this.entities.elements) {
+      if (ent.type === "coin" || ent.type === "zapper") {
+        ent.speed = this.scrollSpeed;
+      }
+    }
+  }
   update(dt, distance, scrollSpeed) {
     this.scrollSpeed = scrollSpeed;
+
+    this.updateSpeed();
     if (
       distance - this.lastDistance > this.distanceBetween &&
       !this.isSpawning

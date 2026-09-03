@@ -16,6 +16,8 @@ class Player extends Rect {
     hitboxHeight,
     zIndex,
     type,
+    spriteWidth,
+    spriteHeight,
     collision,
     input,
     events,
@@ -48,21 +50,30 @@ class Player extends Rect {
       this.position.y,
       width,
       height,
-      108 / 4,
-      36,
+      spriteWidth,
+      spriteHeight,
       15,
     );
     this.animation.add("fly", 1, 1);
     this.animation.add("run", 0, 3);
+    this.animation.add("dead", 2, 3);
     this.wasOnAit = false;
+    // Death
     this.isDead = false;
+    this.fallGrav = new Vector2(0, 2500);
+    this.fallVel = new Vector2(300, 0);
   }
   update(delta) {
     if (this.isDead) {
-      const fallSpeed = 300;
-      if (this.onGround()) return;
-      this.position.x += fallSpeed * delta;
-      this.position.y += fallSpeed * delta;
+      this.animation.select("dead");
+      if (!this.onGround()) {
+        this.fallVel.x += this.fallGrav.x * delta;
+        this.fallVel.y += this.fallGrav.y * delta;
+        this.position.x += this.fallVel.x * delta;
+        this.position.y += this.fallVel.y * delta;
+      }
+      this.animation.update(delta);
+      return;
     }
     const isThrusting = this.input.isDown("go_up");
 
@@ -129,7 +140,9 @@ class Player extends Rect {
     this.collision.unregister(this);
     this.isDead = true;
     this.events.emit("playerDied", { hazard: this });
-    console.log(entity.type);
+    if (entity.type === "zapper") {
+      this.events.emit("playerElectrocuted");
+    }
   }
   draw(ctx) {
     //* Hitbox

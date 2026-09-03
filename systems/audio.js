@@ -14,6 +14,8 @@ class AudioSystem {
     this.land = this.add("land.wav");
     this.rocketLaunch = this.add("rocket-launch.wav");
     this.rocketWarning = this.add("rocket-warning.wav");
+    this.playerElectrocuted = this.add("player_hit.wav");
+    this.playerHurt = this.add("player-hurt.wav");
 
     this.adjustVolume();
   }
@@ -40,6 +42,10 @@ class AudioSystem {
   playCollect() {
     const sound = this.collect.cloneNode();
     sound.play();
+  }
+  playPlayerElectrocuted() {
+    this.playerElectrocuted.play();
+    this.playerHurt.play();
   }
   playJetpackOn() {
     this.jetpackOn.loop = true;
