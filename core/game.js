@@ -210,6 +210,9 @@ class Game {
     this.events.on("playerElectrocuted", () => {
       this.audio.playPlayerElectrocuted();
     });
+    this.events.on("playerExploded", () => {
+      this.audio.playPlayerExploded();
+    });
     this.events.on("rocketWarning", () => {
       this.audio.playRocketWarning();
     });

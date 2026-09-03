@@ -3,8 +3,9 @@ import { AnimatedSprite } from "../systems/animation.js";
 import { RocketFactory } from "./rocketFactory.js";
 import { gameSettings } from "../data/settings.js";
 import { RocketWarning } from "./rocketWarning.js";
-import { rocketWarningData } from "../data/entityData.js";
+import { explosionData, rocketWarningData } from "../data/entityData.js";
 import { ParticleManager } from "../systems/particles.js";
+import { Explosion } from "./explosion.js";
 
 class Rocket extends Hazard {
   constructor(
@@ -100,6 +101,26 @@ class Rocket extends Hazard {
         this.position.x + this.particleXOffset,
         this.position.y + this.particleYOffset,
       );
+    }
+    this.collision.check(this);
+  }
+  onHit(entity) {
+    if (entity.type === "player") {
+      this.events.emit("playerExploded");
+      this.explosion = new Explosion(
+        this.position.x - explosionData.width / 2,
+        this.position.y - explosionData.height / 2,
+        explosionData.width,
+        explosionData.height,
+        explosionData.zIndex,
+        explosionData.src,
+        explosionData.spriteWidth,
+        explosionData.spriteHeight,
+        this.entities,
+      );
+      this.entities.register(this.explosion);
+      this.entities.sortByLayers();
+      this.entities.unregister(this);
     }
   }
 }

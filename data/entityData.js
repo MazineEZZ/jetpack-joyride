@@ -63,6 +63,15 @@ const rocketWarningData = {
   spriteHeight: 376 / 2,
 };
 
+const explosionData = {
+  width: 256,
+  height: 256,
+  zIndex: 6,
+  src: spritesDir + "explosion.png",
+  spriteWidth: 256,
+  spriteHeight: 256,
+};
+
 const stepDist = 54;
 
 const patterns = [
@@ -214,5 +223,6 @@ export {
   zapperData,
   rocketData,
   rocketWarningData,
+  explosionData,
   patterns,
 };

@@ -33,6 +33,7 @@ class AnimatedSprite extends Sprite {
     this.flipH = false;
     this.flipV = false;
     this.isRotated = false;
+    this.isDone = false;
   }
   add(name, row, col) {
     this.animations.push({ name, row, col });
@@ -55,8 +56,12 @@ class AnimatedSprite extends Sprite {
     while (this.timer >= this.frameDuration) {
       this.colCtr++;
       this.timer -= this.frameDuration; // Subtracting to account for the leftover time
-      this.colCtr =
-        this.colCtr >= this.animations[this.selected].col ? 0 : this.colCtr;
+      if (this.colCtr >= this.animations[this.selected].col) {
+        this.colCtr = 0;
+        this.isDone = true;
+      } else {
+        this.colCtr = this.colCtr;
+      }
     }
   }
   anchorToHitbox(hitWidth, hitHeight) {
