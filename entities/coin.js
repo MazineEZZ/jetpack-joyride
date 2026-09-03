@@ -34,6 +34,7 @@ class Coin extends ScrollableEntity {
     }
   }
   onHit(other) {
+    if (other.type !== "player") return;
     this.entities.unregister(this);
     this.collision.unregister(this);
     this.events.emit("coinCollected", { coin: this });

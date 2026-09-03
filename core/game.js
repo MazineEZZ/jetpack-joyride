@@ -5,7 +5,7 @@ import { FactoryRegistry } from "../systems/factories.js";
 import { Inputs } from "../systems/inputs.js";
 import { EventBus } from "../systems/events.js";
 import { AudioSystem } from "../systems/audio.js";
-import { UILayer, Label } from "../ui/ui.js";
+import { UILayer, Label, Panel, ImageUI, Button } from "../ui/ui.js";
 import { Player } from "../entities/player.js";
 import { playerData } from "../data/entityData.js";
 import { SegmentFactory } from "../entities/segmentFactory.js";
@@ -30,12 +30,9 @@ class Game {
     this.lastTime = null;
     this.animationFrameId = null;
     this.isPaused = false;
+    this.clientMouse = { position: { x: 0, y: 0 } };
 
-    // Game data
-    this.score = 0;
-    this.distance = 0;
-    this.scrollSpeed = gameSettings.scrollSpeed;
-    this.difficulty = 2;
+    // Game States ["menu", "playing", "paused", "gameOver"]
 
     // Initial Setup
     this.canvas.width = gameSettings.width;
@@ -53,12 +50,22 @@ class Game {
 
     this.setUpEventListeners();
   }
+  getScaledMousePos(e) {
+    return {
+      x: e.offsetX * (this.canvas.width / this.canvas.clientWidth),
+      y: e.offsetY * (this.canvas.height / this.canvas.clientHeight),
+    };
+  }
   setUpEventListeners() {
+    // this.canvas.addEventListener("mousemove");
+    this.canvas.addEventListener("mousemove", (e) => {
+      this.clientMouse.position = this.getScaledMousePos(e);
+    });
     window.addEventListener("keydown", (e) => {
       if (!this.input.isDown("pause_game")) return;
-      if (!this.isPaused) {
+      if (this.currState === "playing") {
         this.events.emit("gamePaused");
-      } else {
+      } else if (this.currState === "paused") {
         this.events.emit("gameUnpaused");
       }
     });
@@ -67,12 +74,11 @@ class Game {
       this.draw();
     });
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden" && !this.isPaused) {
-        if (!this.isPaused) {
-          this.events.emit("gamePaused");
-        } else {
-          this.events.emit("gameUnpaused");
-        }
+      if (
+        document.visibilityState === "hidden" &&
+        this.currState === "playing"
+      ) {
+        this.events.emit("gamePaused");
       }
     });
   }
@@ -113,7 +119,7 @@ class Game {
       this.ctx.stroke();
     }
   }
-  spawn() {
+  loadEntities() {
     this.player = new Player(
       playerData.x,
       playerData.y,
@@ -133,6 +139,7 @@ class Game {
     );
     this.collisions.register(this.player);
     this.entities.register(this.player);
+    this.entities.sortByLayers();
 
     // Factories
     const segmentFactory = new SegmentFactory(
@@ -184,14 +191,33 @@ class Game {
     this.ui.add(this.scoreLabel);
     this.ui.add(this.distanceCtrLabel);
   }
+  loadMenu() {
+    const menuWidth = 550;
+    const menuHeight = 294;
+    const menuTitle = new ImageUI(
+      "../assets/images/title.png",
+      this.canvas.width / 2 - menuWidth / 2,
+      100,
+      menuWidth,
+      menuHeight,
+      3,
+    );
+
+    const startGameBtn = new Button(10, 10, 100, 40, 3, "black");
+
+    this.ui.add(menuTitle);
+    this.ui.add(startGameBtn);
+    this.ui.sortByLayers();
+  }
   init() {
-    // Entities
-    this.spawn();
-
-    this.entities.sortByLayers();
-
-    // UI
-    this.loadUI();
+    // Game properties
+    this.score = 0;
+    this.distance = 0;
+    this.scrollSpeed = gameSettings.scrollSpeed;
+    this.difficulty = 5;
+    this.speedDecrement = 0;
+    this.currState = "menu";
+    this.loadMenu();
 
     // Music
     this.audio.playMusic();
@@ -205,6 +231,7 @@ class Game {
     this.events.on("playerDied", () => {
       this.messageLabel.setText("You lost!");
       this.ui.add(this.messageLabel);
+      this.currState = "gameOver";
       setTimeout(() => this.restart(), 2000);
     });
     this.events.on("playerElectrocuted", () => {
@@ -240,13 +267,13 @@ class Game {
       this.audio.pauseMusic();
       this.draw();
       this.stop();
-      this.isPaused = true;
+      this.currState = "paused";
     });
     this.events.on("gameUnpaused", () => {
       this.gameLoop();
       this.audio.playMusic();
       this.ui.remove(this.messageLabel);
-      this.isPaused = false;
+      this.currState = "playing";
     });
   }
   draw() {
@@ -262,10 +289,16 @@ class Game {
     // this.debugGrid();
   }
   decreaseSpeed(dt) {
-    if (this.scrollSpeed >= 0) this.scrollSpeed -= 300 * dt;
+    if (this.speedDecrement === 0) this.speedDecrement = this.scrollSpeed / 2;
+    if (this.scrollSpeed >= 0) this.scrollSpeed -= this.speedDecrement * dt;
   }
   update(dt) {
-    if (this.player.isDead) this.decreaseSpeed(dt);
+    if (this.currState === "menu") {
+      this.ui.update(this.clientMouse);
+      return;
+    }
+    // Game Update
+    if (this.currState === "gameOver") this.decreaseSpeed(dt);
     this.scrollSpeed += this.difficulty * dt;
     // Background
     this.background.update(dt, this.scrollSpeed);
@@ -309,8 +342,6 @@ class Game {
   restart() {
     this.stop();
     this.audio.pauseMusic();
-    this.score = 0;
-    this.distance = 0;
     this.scrollSpeed = gameSettings.scrollSpeed;
     this.audio.pauseSounds();
     this.audio = new AudioSystem();

@@ -9,6 +9,19 @@ class UIElement {
   draw(ctx) {}
 }
 
+class Panel extends UIElement {
+  constructor(x, y, zIndex, width, height, color) {
+    super(x, y, zIndex);
+    this.width = width;
+    this.height = height;
+    this.color = color;
+  }
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+}
+
 class Label extends UIElement {
   constructor(
     x,
@@ -74,6 +87,55 @@ class Label extends UIElement {
   }
 }
 
+class ImageUI extends UIElement {
+  constructor(src, x, y, width, height, zIndex) {
+    super(x, y, zIndex);
+    this.width = width;
+    this.height = height;
+    this.image = new Image();
+    this.image.src = src;
+  }
+  draw(ctx) {
+    ctx.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height,
+    );
+  }
+}
+
+class Button extends UIElement {
+  constructor(x, y, width, height, zIndex, color = "black") {
+    super(x, y, zIndex);
+    this.width = width;
+    this.height = height;
+    this.color = color;
+  }
+  update(mouse) {
+    if (isHovering(this, mouse)) {
+      this.color = "white";
+    } else {
+      this.color = "red";
+    }
+    console.log(this.color);
+  }
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+}
+
+function isHovering(element, mouse) {
+  return (
+    element.position.x < mouse.position.x &&
+    mouse.position.x < element.position.x + element.width &&
+    element.position.y < mouse.position.y &&
+    mouse.position.y < element.position.y + element.height
+  );
+}
+
 class UILayer {
   constructor() {
     this.elements = [];
@@ -88,6 +150,13 @@ class UILayer {
   sortByLayers() {
     this.elements.sort((a, b) => a.zIndex - b.zIndex);
   }
+  update(mouse) {
+    for (const el of [...this.elements]) {
+      if (typeof el.update === "function") {
+        el.update(mouse);
+      }
+    }
+  }
   draw(ctx) {
     this.sortByLayers();
     for (const el of [...this.elements]) {
@@ -96,4 +165,4 @@ class UILayer {
   }
 }
 
-export { UILayer, Label };
+export { UILayer, Label, Panel, ImageUI, Button };

@@ -23,7 +23,7 @@ class Explosion extends Rect {
       this.height,
       spriteHeight,
       spriteWidth,
-      30,
+      20,
     );
     this.entities = entities;
     this.animation.add("explosion", 0, 10);
