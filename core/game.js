@@ -30,7 +30,10 @@ class Game {
     this.lastTime = null;
     this.animationFrameId = null;
     this.isPaused = false;
-    this.clientMouse = { position: { x: 0, y: 0 } };
+    this.clientMouse = {
+      position: { x: -10, y: -10 },
+      lastClickPos: { x: -10, y: -10 },
+    };
 
     // Game States ["menu", "playing", "paused", "gameOver"]
 
@@ -57,7 +60,9 @@ class Game {
     };
   }
   setUpEventListeners() {
-    // this.canvas.addEventListener("mousemove");
+    this.canvas.addEventListener("mousedown", (e) => {
+      this.clientMouse.lastClickPos = this.getScaledMousePos(e);
+    });
     this.canvas.addEventListener("mousemove", (e) => {
       this.clientMouse.position = this.getScaledMousePos(e);
     });
@@ -192,6 +197,10 @@ class Game {
     this.ui.add(this.distanceCtrLabel);
   }
   loadMenu() {
+    const fontName = "jjFont";
+    const fontSrc = "../assets/fonts/jjFont.ttf";
+    const fontSize = "30px";
+
     const menuWidth = 550;
     const menuHeight = 294;
     const menuTitle = new ImageUI(
@@ -203,10 +212,39 @@ class Game {
       3,
     );
 
-    const startGameBtn = new Button(10, 10, 100, 40, 3, "black");
+    const btnHeight = 50;
+    const startGameBtnWidth = 200;
+    const startGameBtnX = this.canvas.width / 2 - startGameBtnWidth / 2;
+    const startGameBtnY = 450;
+
+    const startGameBtn = new Button(
+      startGameBtnX,
+      startGameBtnY,
+      startGameBtnWidth,
+      btnHeight,
+      3,
+      this.events,
+      "#5e627e",
+      "#4a5571",
+    );
+
+    const startGameLabel = new Label(
+      startGameBtnX + startGameBtnWidth / 2,
+      startGameBtnY + btnHeight / 2,
+      {
+        text: "Start Game",
+        align: "center",
+        baseline: "middle",
+        fontSize: "24px",
+        zIndex: 4,
+        fontName: fontName,
+        fontSrc: fontSrc,
+      },
+    );
 
     this.ui.add(menuTitle);
     this.ui.add(startGameBtn);
+    this.ui.add(startGameLabel);
     this.ui.sortByLayers();
   }
   init() {
@@ -227,6 +265,12 @@ class Game {
       this.score++;
       this.audio.playCollect();
       this.scoreLabel.setText(`Coins: ${pad(this.score, 3)}`);
+    });
+    this.events.on("gameStarted", () => {
+      this.currState = "playing";
+      this.loadEntities();
+      this.ui.elements.length = 0;
+      this.loadUI();
     });
     this.events.on("playerDied", () => {
       this.messageLabel.setText("You lost!");

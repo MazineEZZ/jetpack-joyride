@@ -1,4 +1,5 @@
 import { gameSettings } from "../data/settings.js";
+import { isColliding } from "../systems/collisions.js";
 
 class UIElement {
   constructor(x, y, zIndex) {
@@ -107,19 +108,33 @@ class ImageUI extends UIElement {
 }
 
 class Button extends UIElement {
-  constructor(x, y, width, height, zIndex, color = "black") {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    zIndex,
+    events,
+    color = "black",
+    hoverClr = "gray",
+  ) {
     super(x, y, zIndex);
     this.width = width;
     this.height = height;
     this.color = color;
+    this.events = events;
+    this.unhoverClr = color;
+    this.hoverClr = hoverClr;
   }
   update(mouse) {
-    if (isHovering(this, mouse)) {
-      this.color = "white";
+    if (isMouseOverlapping(this, mouse.position)) {
+      this.color = this.hoverClr;
     } else {
-      this.color = "red";
+      this.color = this.unhoverClr;
     }
-    console.log(this.color);
+    if (isMouseOverlapping(this, mouse.lastClickPos)) {
+      this.events.emit("gameStarted");
+    }
   }
   draw(ctx) {
     ctx.fillStyle = this.color;
@@ -127,12 +142,12 @@ class Button extends UIElement {
   }
 }
 
-function isHovering(element, mouse) {
+function isMouseOverlapping(element, mousepos) {
   return (
-    element.position.x < mouse.position.x &&
-    mouse.position.x < element.position.x + element.width &&
-    element.position.y < mouse.position.y &&
-    mouse.position.y < element.position.y + element.height
+    element.position.x < mousepos.x &&
+    mousepos.x < element.position.x + element.width &&
+    element.position.y < mousepos.y &&
+    mousepos.y < element.position.y + element.height
   );
 }
 
