@@ -30,7 +30,7 @@ class ScrollingBackground extends Background {
   update(dt, scrollSpeed) {
     this.position.x -= scrollSpeed * dt;
 
-    if (this.position.x <= -this.width) this.position.x += this.width;
+    if (this.position.x <= -this.width) this.position.x += this.width + 1;
   }
 }
 

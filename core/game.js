@@ -34,6 +34,8 @@ class Game {
       position: { x: -10, y: -10 },
       lastClickPos: { x: -10, y: -10 },
     };
+    this.clientCoins = 0;
+    this.clientHighScore = 0;
 
     // Game States ["menu", "playing", "paused", "gameOver"]
 
@@ -224,6 +226,7 @@ class Game {
       btnHeight,
       3,
       this.events,
+      "gameStarted",
       { btnBorderSize: 3, btnBorderColor: "black" },
       {
         text: "Start Game",
@@ -242,7 +245,105 @@ class Game {
     this.ui.add(startGameBtn);
     this.ui.sortByLayers();
   }
-  loadGameOver() {}
+  loadGameOver() {
+    const fontName = "jjFont";
+    const fontSrc = "../assets/fonts/jjFont.ttf";
+    const fontSize = "40px";
+
+    const firstTrisector = gameSettings.width / 3;
+    const secondTrisector = firstTrisector * 2;
+
+    const backShade = new Panel(
+      0,
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height,
+      "rgba(0, 0, 0, 0.3)",
+    );
+
+    const distanceTitle = new Label(firstTrisector, 200, {
+      text: "You flew",
+      color: "white",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+      fontSize: fontSize,
+      align: "center",
+      baseline: "middle",
+    });
+
+    const distanceScore = new Label(firstTrisector, 300, {
+      text: convertPxToMeters(this.distance) + " M",
+      color: "#f5bd4d",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+      fontSize: "120px",
+      align: "center",
+      baseline: "middle",
+    });
+
+    const coinsTitle = new Label(firstTrisector, 400, {
+      text: "And collected",
+      color: "white",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+      fontSize: fontSize,
+      align: "center",
+      baseline: "middle",
+    });
+
+    const coinsScore = new Label(firstTrisector, 500, {
+      text: "COINS: " + this.score,
+      color: "#f5bd4d",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+      fontSize: "80px",
+      align: "center",
+      baseline: "middle",
+    });
+
+    const btnHeight = 50;
+    const btnWidth = 200;
+    const playAgainBtnY = gameSettings.height / 2 - btnHeight / 2;
+
+    const playAgainBtn = new Button(
+      secondTrisector,
+      playAgainBtnY,
+      btnWidth,
+      btnHeight,
+      3,
+      this.events,
+      "gamePlayedAgain",
+      { btnBorderSize: 3, btnBorderColor: "black" },
+      {
+        text: "Play Again",
+        align: "center",
+        baseline: "middle",
+        fontSize: "24px",
+        zIndex: 4,
+        fontName: fontName,
+        fontSrc: fontSrc,
+      },
+      "#5e627e",
+      "#4a5571",
+    );
+
+    this.ui.add(backShade);
+    this.ui.add(distanceTitle);
+    this.ui.add(distanceScore);
+    this.ui.add(coinsTitle);
+    this.ui.add(coinsScore);
+    this.ui.add(playAgainBtn);
+    this.ui.sortByLayers();
+  }
   init() {
     // Game properties
     this.score = 0;
@@ -269,10 +370,12 @@ class Game {
       this.loadUI();
     });
     this.events.on("playerDied", () => {
-      this.messageLabel.setText("You lost!");
-      this.ui.add(this.messageLabel);
+      this.audio.pauseSounds();
       this.currState = "gameOver";
-      setTimeout(() => this.restart(), 2000);
+      this.loadGameOver();
+    });
+    this.events.on("gamePlayedAgain", () => {
+      this.restart();
     });
     this.events.on("playerElectrocuted", () => {
       this.audio.playPlayerElectrocuted();
@@ -331,6 +434,7 @@ class Game {
   decreaseSpeed(dt) {
     if (this.speedDecrement === 0) this.speedDecrement = this.scrollSpeed / 2;
     if (this.scrollSpeed >= 0) this.scrollSpeed -= this.speedDecrement * dt;
+    if (this.scrollSpeed <= 0) this.scrollSpeed = 0;
   }
   update(dt) {
     if (this.currState === "menu") {
@@ -338,7 +442,10 @@ class Game {
       return;
     }
     // Game Update
-    if (this.currState === "gameOver") this.decreaseSpeed(dt);
+    if (this.currState === "gameOver") {
+      this.decreaseSpeed(dt);
+      this.ui.update(this.clientMouse);
+    }
     this.scrollSpeed += this.difficulty * dt;
     // Background
     this.background.update(dt, this.scrollSpeed);

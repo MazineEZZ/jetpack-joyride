@@ -115,6 +115,7 @@ class Button extends UIElement {
     height,
     zIndex,
     events,
+    event,
     { btnBorderSize = "", btnBorderColor = "" },
     {
       text = "",
@@ -134,6 +135,7 @@ class Button extends UIElement {
     this.width = width;
     this.height = height;
     this.color = color;
+    this.event = event;
     this.events = events;
     this.unhoverClr = color;
     this.hoverClr = hoverClr;
@@ -161,7 +163,7 @@ class Button extends UIElement {
       this.color = this.unhoverClr;
     }
     if (isMouseOverlapping(this, mouse.lastClickPos)) {
-      this.events.emit("gameStarted");
+      this.events.emit(this.event);
       mouse.lastClickPos = { x: -10, y: -10 };
     }
   }
