@@ -13,6 +13,7 @@ import { Background, ScrollingBackground } from "./background.js";
 import { convertPxToMeters, pad } from "../utils/utils.js";
 import { ParticleSystem } from "../systems/particles.js";
 import { RocketFactory } from "../entities/rocketFactory.js";
+import { loadItem, saveItem } from "../systems/memory.js";
 
 class Game {
   constructor(canvas) {
@@ -34,8 +35,6 @@ class Game {
       position: { x: -10, y: -10 },
       lastClickPos: { x: -10, y: -10 },
     };
-    this.clientCoins = 0;
-    this.clientHighScore = 0;
 
     // Game States ["menu", "playing", "paused", "gameOver"]
 
@@ -169,7 +168,7 @@ class Game {
     const fontName = "jjFont";
     const fontSrc = "../assets/fonts/jjFont.ttf";
     const fontSize = "30px";
-    this.scoreLabel = new Label(20, 105, {
+    this.scoreLabel = new Label(20, 145, {
       text: "Coins: 000",
       color: "#f5bd4d",
       borderColor: "black",
@@ -177,8 +176,16 @@ class Game {
       fontName: fontName,
       fontSrc: fontSrc,
     });
+    this.highScoreLabel = new Label(20, 105, {
+      text: "BEST: " + convertPxToMeters(this.clientHighScore) + " M",
+      color: "#a1a1a1",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+    });
     this.distanceCtrLabel = new Label(20, 65, {
-      text: "0000 M",
+      text: "000000 M",
       borderColor: "black",
       borderSize: 4,
       fontName: fontName,
@@ -197,6 +204,8 @@ class Game {
     );
     this.ui.add(this.scoreLabel);
     this.ui.add(this.distanceCtrLabel);
+    this.ui.add(this.highScoreLabel);
+    this.ui.sortByLayers();
   }
   loadMenu() {
     const fontName = "jjFont";
@@ -213,6 +222,24 @@ class Game {
       menuHeight,
       3,
     );
+
+    const highScoreLabel = new Label(20, 65, {
+      text: "BEST: " + convertPxToMeters(this.clientHighScore) + " M",
+      color: "#a1a1a1",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+    });
+
+    const totalCoinsLabel = new Label(20, 105, {
+      text: "Coins: " + this.clientCoins,
+      color: "#f5bd4d",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+    });
 
     const btnHeight = 50;
     const startGameBtnWidth = 200;
@@ -243,6 +270,8 @@ class Game {
 
     this.ui.add(menuTitle);
     this.ui.add(startGameBtn);
+    this.ui.add(highScoreLabel);
+    this.ui.add(totalCoinsLabel);
     this.ui.sortByLayers();
   }
   loadGameOver() {
@@ -352,6 +381,10 @@ class Game {
     this.difficulty = 5;
     this.speedDecrement = 0;
     this.currState = "menu";
+    const totalCoins = loadItem("coins");
+    this.clientCoins = totalCoins === null ? 0 : totalCoins;
+    const highScore = loadItem("highscore");
+    this.clientHighScore = highScore === null ? 0 : highScore;
     this.loadMenu();
 
     // Music
@@ -370,9 +403,12 @@ class Game {
       this.loadUI();
     });
     this.events.on("playerDied", () => {
-      this.audio.pauseSounds();
       this.currState = "gameOver";
+      saveItem("coins", this.score + this.clientCoins);
+      if (this.distance > this.clientHighScore)
+        saveItem("highscore", this.distance);
       this.loadGameOver();
+      setTimeout(() => this.audio.pauseSounds(), 1000);
     });
     this.events.on("gamePlayedAgain", () => {
       this.restart();
@@ -452,7 +488,7 @@ class Game {
     // Distance
     this.distance += this.scrollSpeed * dt;
     this.metersCrossed = convertPxToMeters(this.distance);
-    this.distanceCtrLabel.setText(`${pad(this.metersCrossed, 4)} M`);
+    this.distanceCtrLabel.setText(`${pad(this.metersCrossed, 5)} M`);
     // Factories
     this.factories.update(
       dt,
