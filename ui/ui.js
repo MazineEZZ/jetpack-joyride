@@ -115,6 +115,18 @@ class Button extends UIElement {
     height,
     zIndex,
     events,
+    { btnBorderSize = "", btnBorderColor = "" },
+    {
+      text = "",
+      fontClr = "white",
+      borderColor = "black",
+      borderSize = 4,
+      align = "left",
+      baseline = "alphabetic",
+      fontSize = "30px",
+      fontName = "sans-serif",
+      fontSrc = "",
+    } = {},
     color = "black",
     hoverClr = "gray",
   ) {
@@ -125,6 +137,22 @@ class Button extends UIElement {
     this.events = events;
     this.unhoverClr = color;
     this.hoverClr = hoverClr;
+    this.borderSize = btnBorderSize;
+    this.borderColor = btnBorderColor;
+    const labelX = this.position.x + this.width / 2;
+    const labelY = this.position.y + this.height / 2;
+    this.label = new Label(labelX, labelY, {
+      text,
+      color: fontClr,
+      zIndex,
+      borderColor,
+      borderSize,
+      align,
+      baseline,
+      fontSize,
+      fontName,
+      fontSrc,
+    });
   }
   update(mouse) {
     if (isMouseOverlapping(this, mouse.position)) {
@@ -134,11 +162,22 @@ class Button extends UIElement {
     }
     if (isMouseOverlapping(this, mouse.lastClickPos)) {
       this.events.emit("gameStarted");
+      mouse.lastClickPos = { x: -10, y: -10 };
     }
   }
   draw(ctx) {
+    // Border
+    ctx.fillStyle = this.borderColor;
+    ctx.fillRect(
+      this.position.x - this.borderSize,
+      this.position.y - this.borderSize,
+      this.width + this.borderSize * 2,
+      this.height + this.borderSize * 2,
+    );
+    // Button
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    this.label.draw(ctx);
   }
 }
 

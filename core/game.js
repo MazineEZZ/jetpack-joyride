@@ -224,13 +224,7 @@ class Game {
       btnHeight,
       3,
       this.events,
-      "#5e627e",
-      "#4a5571",
-    );
-
-    const startGameLabel = new Label(
-      startGameBtnX + startGameBtnWidth / 2,
-      startGameBtnY + btnHeight / 2,
+      { btnBorderSize: 3, btnBorderColor: "black" },
       {
         text: "Start Game",
         align: "center",
@@ -240,13 +234,15 @@ class Game {
         fontName: fontName,
         fontSrc: fontSrc,
       },
+      "#5e627e",
+      "#4a5571",
     );
 
     this.ui.add(menuTitle);
     this.ui.add(startGameBtn);
-    this.ui.add(startGameLabel);
     this.ui.sortByLayers();
   }
+  loadGameOver() {}
   init() {
     // Game properties
     this.score = 0;
