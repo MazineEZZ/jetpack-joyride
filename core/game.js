@@ -274,7 +274,7 @@ class Game {
     this.ui.add(totalCoinsLabel);
     this.ui.sortByLayers();
   }
-  loadGameOver() {
+  loadGameOver(newBest) {
     const fontName = "jjFont";
     const fontSrc = "../assets/fonts/jjFont.ttf";
     const fontSize = "40px";
@@ -299,6 +299,18 @@ class Game {
       fontName: fontName,
       fontSrc: fontSrc,
       fontSize: fontSize,
+      align: "center",
+      baseline: "middle",
+    });
+
+    const newBestTitle = new Label(firstTrisector - 265, 300, {
+      text: "NEW BEST",
+      color: "#fbcf78",
+      borderColor: "black",
+      borderSize: 4,
+      fontName: fontName,
+      fontSrc: fontSrc,
+      fontSize: "50px",
       align: "center",
       baseline: "middle",
     });
@@ -366,6 +378,9 @@ class Game {
     );
 
     this.ui.add(backShade);
+    if (newBest) {
+      this.ui.add(newBestTitle);
+    }
     this.ui.add(distanceTitle);
     this.ui.add(distanceScore);
     this.ui.add(coinsTitle);
@@ -403,12 +418,15 @@ class Game {
       this.loadUI();
     });
     this.events.on("playerDied", () => {
+      let newBest = false;
       this.currState = "gameOver";
       saveItem("coins", this.score + this.clientCoins);
-      if (this.distance > this.clientHighScore)
+      if (this.distance > this.clientHighScore) {
         saveItem("highscore", this.distance);
-      this.loadGameOver();
-      setTimeout(() => this.audio.pauseSounds(), 1000);
+        newBest = true;
+      }
+      this.loadGameOver(newBest);
+      setTimeout(() => this.audio.pauseSounds(), 2000);
     });
     this.events.on("gamePlayedAgain", () => {
       this.restart();
