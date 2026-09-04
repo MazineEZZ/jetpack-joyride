@@ -402,9 +402,6 @@ class Game {
     this.clientHighScore = highScore === null ? 0 : highScore;
     this.loadMenu();
 
-    // Music
-    this.audio.playMusic();
-
     // Events
     this.events.on("coinCollected", (coin) => {
       this.score++;
@@ -412,6 +409,7 @@ class Game {
       this.scoreLabel.setText(`Coins: ${pad(this.score, 3)}`);
     });
     this.events.on("gameStarted", () => {
+      this.audio.playMusic();
       this.currState = "playing";
       this.loadEntities();
       this.ui.elements.length = 0;
