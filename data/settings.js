@@ -11,6 +11,7 @@ const gameSettings = Object.freeze({
 
 const inputBindings = Object.freeze({
   go_up: " ",
+  go_up_mobile: "pointer",
   pause_game: "Escape",
 });
 

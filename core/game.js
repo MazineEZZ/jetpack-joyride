@@ -23,7 +23,7 @@ class Game {
     this.collisions = new CollisionSystem();
     this.entities = new EntityRegistry();
     this.audio = new AudioSystem();
-    this.input = new Inputs(inputBindings);
+    this.input = new Inputs(inputBindings, this.canvas);
     this.events = new EventBus();
     this.factories = new FactoryRegistry();
     this.particles = new ParticleSystem();

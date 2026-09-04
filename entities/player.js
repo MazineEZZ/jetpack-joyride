@@ -75,7 +75,8 @@ class Player extends Rect {
       this.animation.update(delta);
       return;
     }
-    const isThrusting = this.input.isDown("go_up");
+    const isThrusting =
+      this.input.isDown("go_up") || this.input.isDown("go_up_mobile");
 
     if (isThrusting) {
       this.velocity.y -= this.thrust * delta;

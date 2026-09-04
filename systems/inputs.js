@@ -1,6 +1,9 @@
+import { inputBindings } from "../data/settings.js";
+
 class Inputs {
-  constructor(bindings) {
+  constructor(bindings, canvas) {
     this.bindings = bindings;
+    this.canvas = canvas;
     this.keys = {};
   }
   setUpInputs() {
@@ -9,6 +12,14 @@ class Inputs {
     });
     document.addEventListener("keyup", (e) => {
       this.keys[e.key] = false;
+    });
+    this.canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      this.keys[inputBindings.go_up_mobile] = true;
+    });
+    this.canvas.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      this.keys[inputBindings.go_up_mobile] = false;
     });
   }
   isDown(action) {
