@@ -43,7 +43,7 @@ class Game {
     this.canvas.height = gameSettings.height;
 
     this.background = new ScrollingBackground(
-      "../assets/images/background.png",
+      "assets/images/background.png",
       0,
       0,
       this.canvas.width,
@@ -166,7 +166,7 @@ class Game {
   }
   loadUI() {
     const fontName = "jjFont";
-    const fontSrc = "../assets/fonts/jjFont.ttf";
+    const fontSrc = "assets/fonts/jjFont.ttf";
     const fontSize = "30px";
     this.scoreLabel = new Label(20, 145, {
       text: "Coins: 000",
@@ -209,13 +209,13 @@ class Game {
   }
   loadMenu() {
     const fontName = "jjFont";
-    const fontSrc = "../assets/fonts/jjFont.ttf";
+    const fontSrc = "assets/fonts/jjFont.ttf";
     const fontSize = "30px";
 
     const menuWidth = 550;
     const menuHeight = 294;
     const menuTitle = new ImageUI(
-      "../assets/images/title.png",
+      "assets/images/title.png",
       this.canvas.width / 2 - menuWidth / 2,
       100,
       menuWidth,
@@ -276,7 +276,7 @@ class Game {
   }
   loadGameOver(newBest) {
     const fontName = "jjFont";
-    const fontSrc = "../assets/fonts/jjFont.ttf";
+    const fontSrc = "assets/fonts/jjFont.ttf";
     const fontSize = "40px";
 
     const firstTrisector = gameSettings.width / 3;

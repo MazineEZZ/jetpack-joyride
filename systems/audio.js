@@ -1,6 +1,6 @@
 class AudioSystem {
   constructor() {
-    this.music = new Audio("../assets/music/main-theme.mp3");
+    this.music = new Audio("assets/music/main-theme.mp3");
     this.music.loop = true;
     this.music.volume = 0.1;
 
@@ -21,7 +21,7 @@ class AudioSystem {
     this.adjustVolume();
   }
   add(src) {
-    const soundDir = "../assets/sounds/";
+    const soundDir = "assets/sounds/";
     const audio = new Audio(soundDir + src);
 
     this.sounds.push(audio);

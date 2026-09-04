@@ -45,7 +45,7 @@ class Player extends Rect {
       "fire",
     );
     this.animation = new AnimatedSprite(
-      "../assets/sprites/barry.png",
+      "assets/sprites/barry.png",
       this.position.x,
       this.position.y,
       width,

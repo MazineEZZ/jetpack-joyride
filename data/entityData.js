@@ -14,7 +14,7 @@ const playerData = {
   color: "green",
 };
 
-const spritesDir = "../assets/sprites/";
+const spritesDir = "assets/sprites/";
 
 const S = 40;
 const coinData = {
