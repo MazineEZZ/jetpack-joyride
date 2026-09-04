@@ -60,12 +60,28 @@ class Game {
       y: e.offsetY * (this.canvas.height / this.canvas.clientHeight),
     };
   }
+  getScaledTouchPos(e) {
+    const touch = e.touches[0] || e.changedTouches[0];
+    const rect = this.canvas.getBoundingClientRect();
+    const offsetX = touch.clientX - rect.left;
+    const offsetY = touch.clientY - rect.top;
+    return {
+      x: offsetX * (this.canvas.width / rect.width),
+      y: offsetY * (this.canvas.height / rect.height),
+    };
+  }
   setUpEventListeners() {
     this.canvas.addEventListener("mousedown", (e) => {
       this.clientMouse.lastClickPos = this.getScaledMousePos(e);
     });
     this.canvas.addEventListener("mousemove", (e) => {
       this.clientMouse.position = this.getScaledMousePos(e);
+    });
+    this.canvas.addEventListener("touchstart", (e) => {
+      this.clientMouse.lastClickPos = this.getScaledTouchPos(e);
+    });
+    this.canvas.addEventListener("touchend", (e) => {
+      this.clientMouse.position = this.getScaledTouchPos(e);
     });
     window.addEventListener("keydown", (e) => {
       if (!this.input.isDown("pause_game")) return;
