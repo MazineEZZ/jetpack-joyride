@@ -40,3 +40,11 @@ This project was restricted to a smaller scope due to my miniscule knowledge in 
 ## What's next?
 
 Now that this project is finally done! I'm looking forward to my next game. I still haven't settled on whether I'll do [the 20 game challenge](https://20_games_challenge.gitlab.io/challenge/) provided games or do a similar game that follows the soul objectives.
+
+## Sources
+
+- Sounds: [spriters-resource](https://sounds.spriters-resource.com/mobile/jetpackjoyride/asset/399606/)
+- Fonts: [new-athletic-m54](https://www.dafont.com/new-athletic-m54.font)
+- Sprites & Images: From other github repos (github is open-source and this is a jetpack joyride replica, so don't come at me lol)
+
+> This project was made with ❤️
