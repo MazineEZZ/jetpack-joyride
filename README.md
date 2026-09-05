@@ -49,4 +49,4 @@ Now that this project is finally done! I'm looking forward to my next game. I st
 - Fonts: [new-athletic-m54](https://www.dafont.com/new-athletic-m54.font)
 - Sprites & Images: From other github repos (github is open-source and this is a jetpack joyride replica, so don't come at me lol)
 
-> This project was made with ❤️g
+> This project was made with ❤️
