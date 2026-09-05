@@ -4,6 +4,8 @@
 
 A replica of the popular game **Jetpack Joyride** and my second entry for the [20 game challenge](https://20_games_challenge.gitlab.io/challenge/). Built entirely on top of _my little custom engine_ that is using _Vanilla JS (HTML5 Canvas)._ Here's a [live preview](https://mazineezz.github.io/jetpack-joyride/)
 
+![Game overview](game_overview.gif)
+
 ## Controls
 
 - On pc, press **"space"** to go up and **"escape"** to pause the game. On mobile, **hold** the game screen to go up.
@@ -47,4 +49,4 @@ Now that this project is finally done! I'm looking forward to my next game. I st
 - Fonts: [new-athletic-m54](https://www.dafont.com/new-athletic-m54.font)
 - Sprites & Images: From other github repos (github is open-source and this is a jetpack joyride replica, so don't come at me lol)
 
-> This project was made with ❤️
+> This project was made with ❤️g
